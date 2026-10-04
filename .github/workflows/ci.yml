@@ -29,7 +29,11 @@ jobs:
 
     - name: Build Frontend
       working-directory: src/frontend
-      run: npm run build
+      run: |
+        echo "=== Directory contents ==="
+        ls -la
+        echo "=== Running build ==="
+        npx vite build --debug
 
     - name: Install Python Dependencies
       run: |
