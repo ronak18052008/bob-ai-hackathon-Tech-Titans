@@ -5,7 +5,8 @@ Unified Clinical Journey Reconstruction & Evidence Intelligence Operating System
 import os
 import uuid
 from typing import Dict, Any, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -34,10 +35,27 @@ from src.ai.hallucination_guard import HallucinationGuard
 from src.ocr.engine import OCREngine
 from src.ocr.duplicate_detector import DuplicateDetector
 
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+# Auto-seed if database is empty on start
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    patient_count = db.query(Patient).count()
+    if patient_count == 0:
+        db.close()
+        seed_database()
+    else:
+        db.close()
+    yield
+
 app = FastAPI(
     title="MedSynapse AI API",
     description="Advanced Clinical Journey Reconstruction & Evidence Intelligence Platform powered by IBM watsonx",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # CORS configuration for seamless local and containerized frontend communication
@@ -58,18 +76,6 @@ def get_db():
     finally:
         db.close()
 
-# Auto-seed if database is empty on start
-@app.on_event("startup")
-def startup_event():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    patient_count = db.query(Patient).count()
-    if patient_count == 0:
-        db.close()
-        seed_database()
-    else:
-        db.close()
-
 @app.get("/api/health")
 def health_check():
     return {
@@ -77,7 +83,7 @@ def health_check():
         "service": "MedSynapse AI Clinical OS",
         "platform": "IBM watsonx.ai Foundation Models",
         "database": "SQLite/SQLAlchemy Connected",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": utc_now().isoformat(),
     }
 
 # ----------------- AUTHENTICATION -----------------
@@ -248,7 +254,7 @@ def update_patient_record(patient_id: str, req: UpdatePatientRequest, db: Sessio
         patient_id=patient_id,
         details=f"Updated clinical record for {patient.name}: Condition: '{patient.primary_condition}', Archetype: '{patient.archetype}'",
         ip_address="127.0.0.1",
-        timestamp=datetime.utcnow(),
+        timestamp=utc_now(),
     )
     db.add(audit)
     db.commit()
@@ -410,8 +416,8 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
         document_type=req.document_type,
         status="Processed",
         file_name=f"{clean_title.replace(' ', '_')}.pdf",
-        date_documented=datetime.utcnow(),
-        upload_date=datetime.utcnow(),
+        date_documented=utc_now(),
+        upload_date=utc_now(),
         uploaded_by="Dr. Ananya Roy, FACC",
         author_institution="MedSynapse Clinical Network",
         ocr_confidence=req.ocr_confidence,
@@ -427,7 +433,7 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
     new_event = ClinicalEvent(
         id=event_id,
         patient_id=req.patient_id,
-        event_date=datetime.utcnow(),
+        event_date=utc_now(),
         event_type=req.document_type,
         title=f"{req.document_type}: {clean_title}",
         description=f"Incorporated from newly scanned record: {clean_title}. Diagnoses: {diag_summary}. Reconciled {len(req.medications)} medication entries.",
@@ -453,7 +459,7 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
             frequency=m.get("frequency", "Daily"),
             route="Oral",
             status=m.get("status", "Prescribed"),
-            start_date=datetime.utcnow(),
+            start_date=utc_now(),
             source_document_id=doc_id,
             source_document_title=clean_title,
             page_number=1,
@@ -470,8 +476,8 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
             patient_id=req.patient_id,
             test_name=inv.get("test", "Laboratory Study"),
             category="Diagnostic / Lab",
-            order_date=datetime.utcnow(),
-            result_date=datetime.utcnow(),
+            order_date=utc_now(),
+            result_date=utc_now(),
             result_value=inv.get("value", "Documented"),
             status=inv.get("status", "Completed"),
             source_document_id=doc_id,
@@ -489,7 +495,7 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
             title=g.get("type", "Documented Attention Point"),
             description=g.get("description", "Discrepancy identified in scanned source text."),
             referencing_document=clean_title,
-            referencing_date=datetime.utcnow(),
+            referencing_date=utc_now(),
             referencing_page=1,
             exact_reference_text=req.raw_content[:300],
             missing_item="Follow-up diagnostic report or verification",
@@ -510,7 +516,7 @@ def incorporate_document(req: IncorporateDocumentRequest, db: Session = Depends(
         patient_id=req.patient_id,
         details=f"Scanned document '{clean_title}' incorporated into patient journey. Extracted {len(req.diagnoses)} diagnoses, {len(req.medications)} medications, {len(req.investigations)} labs, {len(req.gaps)} gaps.",
         ip_address="127.0.0.1",
-        timestamp=datetime.utcnow(),
+        timestamp=utc_now(),
     )
     db.add(audit)
 
