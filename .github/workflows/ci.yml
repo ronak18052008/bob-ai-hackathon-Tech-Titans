@@ -1,0 +1,41 @@
+name: MedSynapse AI CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Frontend Dependencies
+      run: npm --prefix src/frontend install
+
+    - name: Build Frontend
+      run: npm --prefix src/frontend run build
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install fastapi uvicorn sqlalchemy pydantic pytest requests reportlab pillow
+
+    - name: Seed Database
+      run: python -m src.database.seed
+
+    - name: Run Automated Tests
+      run: python -m pytest tests/ -v

@@ -1,6 +1,7 @@
-# 🚀 [Your Project Title Here]
+# 🚀 MedSynapse AI
 
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+> Reconstruct the patient's journey. Surface what matters.
+> Advanced Clinical Journey Reconstruction & Evidence Intelligence Operating System
 
 ---
 
@@ -8,36 +9,42 @@
 
 | Field | Value |
 |---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+| **Team Name** | Tech Titans |
+| **Track** | AI |
+| **Team Lead** | Ronak — ronak18052008@gmail.com |
+| **Members** | Agola Aryan Jitendrabhai, Khamar Vaishvi Bhavinkumar, Koladiya Henil Shantibhai, Joshi Darsh Pravinbhai, Chandrala Khush Sumeshbhai |
+
+### Team Members & Roles
+| Name | Email | Responsibility |
+|---|---|---|
+| **Ronak** (Lead) | `ronak18052008@gmail.com` | Full-Stack Architecture, IBM Granite 3.0 & watsonx Pipeline |
+| **Agola Aryan Jitendrabhai** | `aryanagola7@gmail.com` | Multimodal OCR Engine & Clinical Entity Extraction |
+| **Khamar Vaishvi Bhavinkumar** | `vaishvi.khamar@gmail.com` | Longitudinal Knowledge Graph & Timeline Reconstruction |
+| **Koladiya Henil Shantibhai** | `koladiyahenil08@gmail.com` | Documentation Conflict Surveillance & Clinical Gap Radar |
+| **Joshi Darsh Pravinbhai** | `250170107047@vgecg.ac.in` | Frontend Synapse Workspace & Clinical Copilot UI |
+| **Chandrala Khush Sumeshbhai** | `250170107015@vgecg.ac.in` | Evidence Citation Provenance & Automated Test Suite |
 
 ---
 
 ## 🎯 Problem Statement
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
-
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
+Clinicians spend 15 to 35 minutes per patient encounter manually reviewing dozens of fragmented, unstructured medical documents (prior discharge summaries, outpatient prescriptions, lab panels, and referral slips). Critical medication dosage shifts, missing investigation reports, and contradictory clinical notes frequently go unnoticed, driving severe cognitive overload, redundant repeat testing, and preventable patient harm.
 
 ---
 
 ## 💡 Solution
 
-> In 2–3 sentences: What did you build? How does it solve the problem above?
-
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
+MedSynapse AI transforms fragmented medical records into a structured longitudinal patient journey, interactive knowledge graph, evidence-backed clinical summary, medication evolution timeline, and automated documentation gap radar—with 100% of claims anchored to page coordinates without hallucination.
 
 ---
 
 ## ✨ Key Features
 
-- **Feature 1:** [Brief description — e.g., "Real-time anomaly detection using watsonx.ai"]
-- **Feature 2:** [Brief description]
-- **Feature 3:** [Brief description]
-- **Feature 4:** [Optional]
-- **Feature 5:** [Optional]
+- **Scan & Summarize Engine:** First-class medical document scan & multimodal OCR pipeline with coordinate-level source citations.
+- **Longitudinal Patient Journey Reconstruction:** Synthesizes disparate encounters into an interactive timeline and multi-relational knowledge graph.
+- **Clinical Change Lens & Medication Evolution:** Chronological tracking of pharmacotherapy shifts (*Started*, *Dose Changed*, *Stopped*) with documented clinical indications.
+- **Surveillance Gap Radar & Conflict Detector:** Flags referenced diagnostic tests lacking formal reports and pinpoints contradictory drug dosages or allergy discrepancies across providers.
+- **Synchronized 3-Panel Synapse View & Copilot:** Synchronized Timeline, Clinical Intelligence card, and Evidence Rail with pre-export Second Look clinical audit.
 
 ---
 
@@ -45,27 +52,29 @@
 
 | Category | Technologies |
 |---|---|
-| **Languages** | [e.g., Python, TypeScript] |
-| **Frameworks** | [e.g., FastAPI, React] |
-| **IBM Technologies** | [e.g., watsonx.ai, IBM Bob, IBM Cloud] |
-| **Databases** | [e.g., PostgreSQL, Redis] |
-| **Other** | [e.g., Docker, GitHub Actions] |
+| **Languages** | Python, TypeScript, SQL |
+| **Frameworks** | FastAPI, React 18, Vite, Tailwind CSS, Pydantic |
+| **IBM Technologies** | watsonx.ai, IBM Granite 3.0, IBM Bob Agentic Framework |
+| **Databases** | SQLite, PostgreSQL-ready, SQLAlchemy ORM |
+| **Other** | Tesseract OCR, Pytest, Docker, GitHub Actions, Lucide Icons |
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-├── src/                  # All source code
+├── src/                  # All source code (FastAPI backend & React frontend)
 ├── docs/                 # Written documentation
 │   ├── problem-statement.md
 │   ├── solution-overview.md
 │   ├── architecture.md
-│   └── setup-guide.md
+│   ├── setup-guide.md
+│   └── template-guide.md
 ├── demo/                 # Demo artifacts
-│   ├── screenshots/      # App screenshots
-│   └── demo-video-link.txt  # Link to demo video
-├── presentation/         # Slide deck
+│   ├── screenshots/      # App screenshots (01-home-dashboard.png, etc.)
+│   ├── demo-video-link.txt  # Link to demo video
+│   └── live-demo-url.txt    # URL to running prototype
+├── presentation/         # Slide deck (slides.pdf)
 └── submission.yaml       # Structured submission metadata
 ```
 
@@ -77,19 +86,27 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
+git clone https://github.com/ronak18052008/bob-ai-hackathon-Tech-Titans.git
+cd bob-ai-hackathon-Tech-Titans
 
-# 2. Install dependencies
-[your install command here]
+# 2. Automated 1-Click Launch (Recommended)
+# On Windows:
+setup.bat
+run.bat
 
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your values
+# On Linux / macOS / WSL:
+chmod +x setup.sh run.sh
+./setup.sh
+./run.sh
 
-# 4. Run the project
-[your run command here]
+# 3. Manual Steps:
+pip install -r requirements.txt
+npm --prefix src/frontend install
+npm --prefix src/frontend run build
+python -m uvicorn src.backend.main:app --host 0.0.0.0 --port 8000
 ```
+
+The application will be available at: `http://localhost:8000`
 
 ---
 
@@ -100,7 +117,7 @@ cp .env.example .env
 | 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
 | 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
 | 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | [See presentation/slides.pdf](presentation/) |
+| 📊 Presentation | [See presentation/slides.pdf](presentation/slides.pdf) |
 
 ---
 
@@ -108,14 +125,12 @@ cp .env.example .env
 
 > Be honest — judges appreciate transparency over overclaiming.
 
-- [Limitation 1: e.g., "Authentication is mocked — not production-ready"]
-- [Limitation 2: e.g., "Only tested on Chrome"]
-- [Limitation 3: e.g., "Feature X is scaffolded but not fully implemented"]
+- **Handwritten Prescription Ambiguity:** Severely degraded, cursive handwritten doctor notes trigger an explicit "Low-Confidence Text — Review Required" verification alert rather than guessing ungrounded text.
+- **Multi-Language Medical Records:** Current OCR and entity normalization models are optimized for English medical terminology with cross-lingual support for 6 regional Indian languages (Hindi, Gujarati, Marathi, Tamil, Telugu, Bengali).
+- **ABDM Milestone Gateway:** The current ABDM FHIR R4 connector runs on synthetic sandbox integration gateways rather than live production hospital networks.
 
 ---
 
 ## 🏅 What We're Most Proud Of
 
-[Tell the judges what part of your submission is strongest and worth paying close attention to.]
-
----
+The synchronized 3-Panel Synapse View and Evidence-First architecture. Every single clinical fact links directly to Document ID, Page Number, and Section Text, preventing AI hallucinations while reconstructing complex multi-encounter patient journeys in under 3 seconds.

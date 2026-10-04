@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/brand/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedSynapse AI — Clinical Journey Reconstruction & Evidence Intelligence</title>
+    <meta name="description" content="Reconstruct the patient's clinical journey. Surface documented gaps, conflicts, and changes that doctors need to review." />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+      // Prevent theme flashing
+      (function() {
+        try {
+          var saved = localStorage.getItem('medsynapse_theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark) || (saved === 'system' && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-background text-text-primary antialiased font-sans selection:bg-primary/20 selection:text-primary">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

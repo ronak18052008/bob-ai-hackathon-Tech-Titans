@@ -1,0 +1,23 @@
+{
+  "name": "medsynapse-ai",
+  "version": "1.0.0",
+  "description": "MedSynapse AI - Advanced Clinical Journey Reconstruction & Evidence Intelligence Platform",
+  "scripts": {
+    "dev:frontend": "npm --prefix src/frontend run dev",
+    "build:frontend": "npm --prefix src/frontend run build",
+    "dev:backend": "python -m uvicorn src.backend.main:app --reload --port 8000",
+    "test:backend": "pytest tests/ -v",
+    "seed": "python -m src.database.seed",
+    "start": "python -m src.backend.main"
+  },
+  "keywords": [
+    "clinical-ai",
+    "patient-journey",
+    "evidence-grounded",
+    "medical-intelligence",
+    "watsonx",
+    "medsynapse"
+  ],
+  "author": "MedSynapse AI Team",
+  "license": "Apache-2.0"
+}

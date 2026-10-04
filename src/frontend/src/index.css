@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 14pt; /* Increased by 2pt across entire website (12pt default -> 14pt, or 16px -> 18.67px) */
+  }
+
+  body {
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :root {
+    /* LIGHT THEME (Section 8) */
+    --color-background: #F6F8FB;
+    --color-surface: #FFFFFF;
+    --color-surface-secondary: #F1F5F8;
+    --color-surface-elevated: #FFFFFF;
+    --color-surface-hover: #EAEFF4;
+
+    --color-border: #DCE3EA;
+    --color-border-strong: #BDC8D3;
+
+    --color-text-primary: #172033;
+    --color-text-secondary: #536174;
+    --color-text-muted: #7B8798;
+    --color-text-disabled: #A6B2C1;
+
+    --color-primary: #176B87;
+    --color-primary-hover: #12556B;
+    --color-primary-soft: #E5F3F7;
+
+    --color-secondary: #238FA7;
+
+    /* Synapse AI Accent (Section 11: AI-generated intelligence, NOT severity) */
+    --color-ai: #635BFF;
+    --color-ai-soft: #EEEDFF;
+
+    /* Clinical Severity Semantics */
+    --color-success: #16845B;
+    --color-success-soft: #E8F7F0;
+
+    --color-warning: #B7791F;
+    --color-warning-soft: #FEF7E8;
+
+    --color-error: #C43D4B;
+    --color-error-soft: #FDECEE;
+
+    --color-info: #0284C7;
+    --color-info-soft: #E0F2FE;
+
+    --color-critical: #991B1B;
+    --color-critical-soft: #FEE2E2;
+
+    --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+    --shadow-elevation: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+    --shadow-popover: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+  }
+
+  .dark {
+    /* DARK THEME (Section 9) */
+    --color-background: #0B1117;
+    --color-surface: #151F28;
+    --color-surface-secondary: #101820;
+    --color-surface-elevated: #1A2631;
+    --color-surface-hover: #223241;
+
+    --color-border: #293844;
+    --color-border-strong: #3A4F60;
+
+    --color-text-primary: #F3F7FA;
+    --color-text-secondary: #B5C2CD;
+    --color-text-muted: #7F909D;
+    --color-text-disabled: #526372;
+
+    --color-primary: #4DB6D2;
+    --color-primary-hover: #63C3DD;
+    --color-primary-soft: rgba(77, 182, 210, 0.12);
+
+    --color-secondary: #65C4D9;
+
+    /* Synapse AI Accent (Dark) */
+    --color-ai: #9B8CFF;
+    --color-ai-soft: rgba(155, 140, 255, 0.15);
+
+    /* Clinical Severity Semantics */
+    --color-success: #4CCB8A;
+    --color-success-soft: rgba(76, 203, 138, 0.12);
+
+    --color-warning: #E5B85C;
+    --color-warning-soft: rgba(229, 184, 92, 0.12);
+
+    --color-error: #F06A78;
+    --color-error-soft: rgba(240, 106, 120, 0.15);
+
+    --color-info: #38BDF8;
+    --color-info-soft: rgba(56, 189, 248, 0.12);
+
+    --color-critical: #F87171;
+    --color-critical-soft: rgba(248, 113, 113, 0.15);
+
+    --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-elevation: 0 4px 14px -2px rgba(0, 0, 0, 0.5);
+    --shadow-popover: 0 12px 28px -5px rgba(0, 0, 0, 0.65);
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Section 80: Source medical documents maintain white background and high contrast regardless of UI theme */
+.original-document-viewport {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: #D1D5DB !important;
+}
+
+/* Section 83: Print / Export styling defaults to clinical print-safe light styling */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+
+/* User requirement: Scale all arbitrary pixel utility text sizes by +2pt (~2.67px) */
+[class*="text-[8px]"] { font-size: calc(8px + 2pt) !important; }
+[class*="text-[9px]"] { font-size: calc(9px + 2pt) !important; }
+[class*="text-[10px]"] { font-size: calc(10px + 2pt) !important; }
+[class*="text-[11px]"] { font-size: calc(11px + 2pt) !important; }
+[class*="text-[12px]"] { font-size: calc(12px + 2pt) !important; }
+[class*="text-[13px]"] { font-size: calc(13px + 2pt) !important; }
+[class*="text-[14px]"] { font-size: calc(14px + 2pt) !important; }
+[class*="text-[15px]"] { font-size: calc(15px + 2pt) !important; }
+

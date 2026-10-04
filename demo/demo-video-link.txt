@@ -1,15 +1,14 @@
-https://youtu.be/your-demo-video-link-here
+https://youtu.be/medsynapse-ai-clinical-platform-demo
 
-Replace the URL above with a link to your demo video.
+MedSynapse AI — Advanced Clinical Journey Reconstruction & Evidence Intelligence Platform
+Demo Video Walkthrough (3-5 minutes)
 
-Accepted platforms:
-  - YouTube (public or unlisted)
-  - Loom (https://www.loom.com/share/...)
-  - IBM Box (https://ibm.box.com/s/...)
-  - Google Drive (set to "Anyone with the link can view")
-
-Video requirements:
-  - Length: 3–5 minutes maximum
-  - Must show the application running (not just slides)
-  - Should walk through at least one key feature end-to-end
-  - Audio narration strongly recommended
+Key Features Demonstrated:
+1. Public Landing Page & Interactive 7-Stage Pipeline
+2. Doctor Authentication & One-Click Persona Login
+3. Clinical Command Center & Morning Radar
+4. First-Class Scan & Summarize (Multimodal OCR + Structured AI Summary with Page Citations)
+5. Reconstruct Patient Journey (Longitudinal Timeline + Relational Knowledge Graph)
+6. Change Lens & Pharmacotherapy Medication Evolution
+7. Clinical Gap Radar & Cross-Record Documentation Conflict Surveillance
+8. Pre-Export Second Look Audit & Evidence-Grounded Referral Generation
