@@ -1,7 +1,5 @@
 # 🚀 MedBrief AI
 
----
-
 ## 👥 Team
 
 | Field | Value |
