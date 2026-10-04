@@ -3,27 +3,36 @@
 # =============================================================================
 
 team:
-  name: Tech Titans                             # REQUIRED
-  track: "AI"                                     # REQUIRED 
+  name: Tech Titans                             
+  track: "AI"                                  
   lead:
-    name: Ronak Marvaniya             # REQUIRED
-    email: ronakmarvaniya1805@gmail.com           # REQUIRED
+    name: Ronak Marvaniya             
+    email: ronakmarvaniya1805@gmail.com          
   members:
-    - name: "REPLACE_BEFORE_SUBMISSION"           # REQUIRED
-      email: "REPLACE_BEFORE_SUBMISSION"
+    - name: Henil Koladiya           
+      email: koladiyahenil08@gmail.com
+    - name: Darsh Joshi         
+      email: 250170107047@vgecg.ac.in
+    - name: Vaishvi Khamar          
+      email: vaishvi.khamar@gmail.com
+    - name: Aryan Agola           
+      email: aryanagola7@gmail.com
+    - name: Khush Chandrala           
+      email: 250170107015@vgecg.ac.in
+      
 
 submission:
-  title: "MedBrief"                               # REQUIRED
+  title: "MedBrief AI"                               
 
-  problem_statement: >                 # REQUIRED
+  problem_statement: >                 
     Clinicians spend up to two hours daily reading and summarising complex patient records. 
     Important events and medication changes can be buried in unstructured notes, leading to avoidable readmissions.
 
-  solution_summary: >                  # REQUIRED
+  solution_summary: >                  
     MedBrief is a clinical documentation assistant that helps clinicians review patient records and prepare evidence-linked summaries. 
     It provides a clear timeline, highlights medication changes, and references sources directly.
 
-  key_features:                        # REQUIRED
+  key_features:                        
     - "Import clinical notes to generate summaries for ward rounds, referrals, and discharges"
     - "Extract and present a chronological timeline of clinical events"
     - "Identify and highlight medication changes and outstanding investigations"
@@ -31,7 +40,7 @@ submission:
     - "IBM Bob MCP Server integration for AI-powered summarisation workflows"
 
   tech_stack:
-    languages: ["TypeScript", "JavaScript", "HTML", "CSS"]                      # REQUIRED
+    languages: ["TypeScript", "JavaScript", "HTML", "CSS"]                   
     frameworks: ["React", "Vite"]                     
     ibm_technologies: ["IBM Bob", "watsonx.ai"]               
     databases: []                      
