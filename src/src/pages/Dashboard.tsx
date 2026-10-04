@@ -1,117 +1,262 @@
 import { Link } from 'react-router-dom';
-import { Users, FileText, CheckSquare, Clock, FileUp, AlertCircle, ArrowRight, Activity } from 'lucide-react';
+import { FileUp, Users, FileText, Clock, AlertTriangle, RefreshCw, ArrowRight, Activity } from 'lucide-react';
+
+const recentPatients = [
+  {
+    id: 'RM-8492', name: 'Rahul Mehta', age: 58, lastUpdate: 'Today, 10:42 AM',
+    records: 14, admissions: 3, status: 'Review Needed',
+    changes: 3, medChanges: 2, pending: 1, inconsistencies: 1,
+  },
+  {
+    id: 'SP-9231', name: 'Sunita Patel', age: 72, lastUpdate: 'Yesterday, 2:30 PM',
+    records: 8, admissions: 1, status: 'Up to date',
+    changes: 0, medChanges: 0, pending: 0, inconsistencies: 0,
+  },
+];
+
+const activityFeed = [
+  { time: '10:42 AM', event: 'New discharge summary processed', type: 'doc', patient: 'Rahul Mehta' },
+  { time: '10:38 AM', event: 'Medication change detected', type: 'med', patient: 'Rahul Mehta' },
+  { time: '10:31 AM', event: 'Potential inconsistency flagged', type: 'flag', patient: 'Rahul Mehta' },
+  { time: '10:20 AM', event: 'New investigation result extracted', type: 'lab', patient: 'Rahul Mehta' },
+];
+
+const activityColor: Record<string, string> = {
+  doc: 'var(--teal)',
+  med: 'var(--clinical-blue-text)',
+  flag: 'var(--warning)',
+  lab: 'var(--success)',
+};
+const activityBg: Record<string, string> = {
+  doc: 'var(--teal-light)',
+  med: 'var(--clinical-blue)',
+  flag: 'var(--warning-bg)',
+  lab: 'var(--success-bg)',
+};
+
+const stats = [
+  { label: 'Total Patients', value: '1,248', icon: Users, color: 'var(--teal)', bg: 'var(--teal-light)' },
+  { label: 'Documents Processed', value: '3,842', icon: FileText, color: 'var(--clinical-blue-text)', bg: 'var(--clinical-blue)' },
+  { label: 'Active Reviews', value: '4', icon: Clock, color: 'var(--warning)', bg: 'var(--warning-bg)' },
+  { label: 'Pending Items', value: '12', icon: AlertTriangle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
+];
 
 export default function Dashboard() {
-  const recentPatients = [
-    { id: 'RM-8492', name: 'Rahul Mehta', age: 58, lastUpdate: 'Today, 09:42 AM', records: 14, status: 'Review Needed' },
-    { id: 'SP-9231', name: 'Sunita Patel', age: 72, lastUpdate: 'Yesterday, 14:30 PM', records: 8, status: 'Up to date' },
-  ];
-
   return (
-    <div className="flex flex-col gap-8 min-h-full">
-      <header className="flex justify-between items-end animate-fade-in">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+      {/* Header */}
+      <div className="animate-fade-in" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
-          <h1 className="text-4xl mb-2 text-gradient">Good morning, Dr. Sharma</h1>
-          <p className="text-secondary text-lg m-0 font-medium">Review patient records faster with evidence-grounded clinical summaries.</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', marginBottom: '0.35rem' }}>
+            Good morning, Dr. Sharma.
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>
+            Here's what needs your attention today.
+          </p>
         </div>
-        <Link to="/upload" className="btn btn-primary">
-          <FileUp className="w-4 h-4" /> Upload New Records
-        </Link>
-      </header>
+        <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+          <Link to="/patient/RM-8492/what-changed" className="btn btn-secondary btn-sm" style={{ textDecoration: 'none' }}>
+            Open Demo Patient
+          </Link>
+          <Link to="/upload" className="btn btn-primary btn-sm" style={{ textDecoration: 'none' }}>
+            <FileUp size={15} /> Upload Records
+          </Link>
+        </div>
+      </div>
 
       {/* Stats row */}
-      <div className="grid md:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Patients', value: '1,248', icon: Users, color: 'text-teal', bg: 'var(--primary-light)' },
-          { label: 'Active Reviews', value: '4', icon: Clock, color: 'text-warning', bg: 'var(--warning-bg)' },
-          { label: 'Documents Processed', value: '3,842', icon: FileText, color: 'text-blue', bg: 'var(--accent-light)' },
-          { label: 'Pending Review Items', value: '12', icon: CheckSquare, color: 'text-danger', bg: 'var(--danger-bg)' },
-        ].map((stat, idx) => (
-          <div key={idx} className="glass-surface p-5 flex items-center gap-4 animate-scale-in" style={{ animationDelay: `${idx * 0.1}s` }}>
-            <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: stat.bg }}>
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+      <div className="grid-4 animate-fade-in delay-1">
+        {stats.map((s, i) => (
+          <div key={i} className="stat-card">
+            <div style={{
+              width: 38, height: 38, borderRadius: 10,
+              background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <s.icon size={18} color={s.color} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-1">{stat.label}</p>
-              <h3 className="text-2xl font-bold m-0 text-primary">{stat.value}</h3>
+              <div className="stat-number">{s.value}</div>
+              <div className="stat-label">{s.label}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* Recent Patients */}
-        <div className="md:col-span-2 flex flex-col gap-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold m-0">Recent Patients</h2>
-            <Link to="/patients" className="text-sm font-medium text-teal flex items-center gap-1 hover:underline" style={{ textDecoration: 'none' }}>
-              View all <ArrowRight className="w-4 h-4" />
+      {/* Main content row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem' }}>
+
+        {/* Patient Intelligence */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h2 style={{ fontSize: '1.125rem', marginBottom: '0.15rem' }}>Patient Intelligence</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>Patients with recent activity</p>
+            </div>
+            <Link to="/patients" style={{
+              display: 'flex', alignItems: 'center', gap: '0.25rem',
+              fontSize: '0.875rem', fontWeight: 600, color: 'var(--teal)', textDecoration: 'none'
+            }}>
+              View all <ArrowRight size={14} />
             </Link>
           </div>
-          
-          <div className="glass-surface overflow-hidden animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="flex flex-col">
-              {recentPatients.map((patient, idx) => (
-                <Link 
-                  to={`/patient/${patient.id}/timeline`}
-                  key={idx} 
-                  className="flex items-center justify-between p-5 transition-colors"
-                  style={{ 
-                    borderBottom: idx !== recentPatients.length - 1 ? '1px solid var(--border)' : 'none',
-                    textDecoration: 'none',
-                    backgroundColor: 'var(--bg-surface)'
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-main)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-surface)')}
-                >
+
+          {recentPatients.map((p, i) => (
+            <Link
+              key={p.id}
+              to={`/patient/${p.id}/what-changed`}
+              className={`patient-card animate-fade-in delay-${i + 2}`}
+              style={{ textDecoration: 'none' }}
+            >
+              {/* Top row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    background: 'linear-gradient(135deg, var(--teal-light) 0%, var(--mint) 100%)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    fontFamily: 'Manrope', fontWeight: 800, fontSize: '1.125rem', color: 'var(--teal)',
+                  }}>
+                    {p.name.split(' ').map(n => n[0]).join('')}
+                  </div>
                   <div>
-                    <h3 className="text-base font-bold m-0 text-primary">{patient.name}</h3>
-                    <p className="text-sm text-secondary m-0 mt-1">
-                      ID: {patient.id} &middot; {patient.age}yo &middot; {patient.records} records
-                    </p>
+                    <div style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: '1rem', color: 'var(--text-heading)' }}>
+                      {p.name}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>
+                      {p.age} yrs · ID: {p.id}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-muted">{patient.lastUpdate}</span>
-                    <span className={`badge ${patient.status === 'Review Needed' ? 'badge-warning' : 'badge-neutral'}`}>
-                      {patient.status}
-                    </span>
+                </div>
+                <span className={`badge ${p.status === 'Review Needed' ? 'badge-warning' : 'badge-success'}`}>
+                  {p.status}
+                </span>
+              </div>
+
+              {/* Metrics row */}
+              {p.changes > 0 && (
+                <div style={{
+                  display: 'flex', gap: '0.625rem', flexWrap: 'wrap',
+                  paddingTop: '0.875rem', borderTop: '1px solid var(--border)',
+                }}>
+                  <span className="badge badge-teal">{p.changes} changes</span>
+                  <span className="badge badge-pending">{p.medChanges} med changes</span>
+                  {p.pending > 0 && <span className="badge badge-warning">{p.pending} pending</span>}
+                  {p.inconsistencies > 0 && <span className="badge badge-danger">{p.inconsistencies} inconsistency</span>}
+                </div>
+              )}
+
+              {/* Bottom row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <Clock size={12} /> Last updated {p.lastUpdate}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--teal)' }}>
+                  Review <ArrowRight size={14} />
+                </div>
+              </div>
+            </Link>
+          ))}
+
+          <Link to="/patients/new" className="btn btn-secondary" style={{ textDecoration: 'none', alignSelf: 'flex-start' }}>
+            <Users size={15} /> Add New Patient
+          </Link>
+        </div>
+
+        {/* Activity Feed */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.125rem', marginBottom: '0.15rem' }}>Activity Feed</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>Today's processing log</p>
+          </div>
+
+          <div className="card animate-fade-in delay-3" style={{ padding: '1.25rem', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              {activityFeed.map((a, i) => (
+                <div key={i} style={{
+                  display: 'flex', gap: '0.875rem', alignItems: 'flex-start',
+                  padding: '0.875rem 0',
+                  borderBottom: i < activityFeed.length - 1 ? '1px solid var(--border)' : 'none',
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', paddingTop: '2px' }}>
+                    <div style={{
+                      width: 8, height: 8, borderRadius: '50%',
+                      background: activityColor[a.type], flexShrink: 0,
+                    }} />
                   </div>
-                </Link>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-body)', marginBottom: '0.15rem' }}>
+                      {a.event}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      {a.time} · {a.patient}
+                    </div>
+                  </div>
+                  <div style={{
+                    flexShrink: 0, width: 28, height: 28, borderRadius: 7,
+                    background: activityBg[a.type],
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Activity size={13} color={activityColor[a.type]} />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Recent Changes & Alerts */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold m-0">Recent Changes Alerts</h2>
-          <div className="glass-surface p-5 flex flex-col gap-4 h-full animate-fade-in" style={{ animationDelay: '0.5s' }}>
-            <div className="p-3 rounded-md flex gap-3 items-start" style={{ backgroundColor: 'var(--warning-bg)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-              <Activity className="w-5 h-5 text-warning flex-shrink-0" />
-              <div>
-                <p className="text-sm font-semibold m-0" style={{ color: '#92400E' }}>Rahul Mehta</p>
-                <p className="text-sm m-0 mt-1" style={{ color: '#92400E' }}>3 medication changes detected in latest admission notes.</p>
+          {/* Quick summary */}
+          <div className="card animate-fade-in delay-4" style={{ padding: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem' }}>
+              <div style={{
+                width: 24, height: 24, borderRadius: 6,
+                background: 'var(--teal-light)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <RefreshCw size={12} color="var(--teal)" />
               </div>
+              <span style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-heading)' }}>
+                Latest Brief Ready
+              </span>
             </div>
-            
-            <div className="p-3 rounded-md flex gap-3 items-start" style={{ backgroundColor: 'var(--accent-light)', border: '1px solid #BFDBFE' }}>
-              <FileText className="w-5 h-5 text-blue flex-shrink-0" />
-              <div>
-                <p className="text-sm font-semibold m-0" style={{ color: '#1E3A8A' }}>Devendra Kulkarni</p>
-                <p className="text-sm m-0 mt-1" style={{ color: '#1E3A8A' }}>2 new investigations added. Results available.</p>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-md flex gap-3 items-start" style={{ backgroundColor: 'var(--danger-bg)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-              <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
-              <div>
-                <p className="text-sm font-semibold m-0" style={{ color: '#991B1B' }}>Rahul Mehta</p>
-                <p className="text-sm m-0 mt-1" style={{ color: '#991B1B' }}>1 potential contradiction regarding ongoing dosage.</p>
-              </div>
-            </div>
+            <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', marginBottom: '0.875rem', lineHeight: 1.55 }}>
+              Rahul Mehta's clinical brief has been updated with 3 new changes from the latest admission.
+            </p>
+            <Link to="/patient/RM-8492/briefs" className="btn btn-sm btn-primary" style={{ textDecoration: 'none', width: '100%' }}>
+              View Brief
+            </Link>
           </div>
         </div>
       </div>
+
+      {/* How it works strip */}
+      <div className="animate-fade-in delay-5" style={{
+        background: 'linear-gradient(135deg, var(--navy) 0%, var(--navy-80) 100%)',
+        borderRadius: 'var(--r-xl)', padding: '2rem 2.5rem', color: '#fff',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '2rem', flexWrap: 'wrap',
+        marginTop: '0.5rem',
+      }}>
+        <div>
+          <h2 style={{ color: '#fff', fontSize: '1.25rem', marginBottom: '0.4rem' }}>
+            Turn fragmented records into one clinical story.
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', margin: 0 }}>
+            Upload documents → Extract insights → Review evidence → Generate brief.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <Link to="/upload" className="btn btn-sm" style={{
+            background: 'rgba(255,255,255,0.12)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', textDecoration: 'none'
+          }}>
+            <FileUp size={14} /> Upload Records
+          </Link>
+          <Link to="/patient/RM-8492/what-changed" className="btn btn-sm" style={{
+            background: 'var(--teal)', color: '#fff', textDecoration: 'none'
+          }}>
+            Open Demo Patient
+          </Link>
+        </div>
+      </div>
+
     </div>
   );
 }

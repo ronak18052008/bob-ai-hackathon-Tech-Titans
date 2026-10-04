@@ -5,38 +5,53 @@ export default function CareGaps() {
   const gaps = mockPatient.careGaps;
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in pb-8">
-      <header>
-        <h1 className="text-3xl mb-2">Documented Follow-up & Outstanding Items</h1>
-        <p className="text-secondary text-lg m-0">Items explicitly mentioned in records that appear pending.</p>
-      </header>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', paddingBottom: '2rem' }}>
+      <div className="page-header" style={{ marginBottom: 0 }}>
+        <h1>Documented Follow-ups</h1>
+        <p>Items explicitly mentioned in records that appear pending or outstanding.</p>
+      </div>
 
-      <div className="grid gap-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {gaps.map((gap, idx) => (
-          <div key={idx} className="surface p-6 flex flex-col gap-4 border-l-4" style={{ borderLeftColor: 'var(--warning)' }}>
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg font-bold m-0" style={{ color: 'var(--text-primary)' }}>{gap.title}</h3>
-                <p className="text-sm font-medium mt-1" style={{ color: '#92400E' }}>Status: {gap.status}</p>
-                <p className="text-sm text-secondary m-0">{gap.date}</p>
+          <div
+            key={idx}
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--warning-border)',
+              borderRadius: 'var(--r-xl)',
+              borderLeft: '4px solid var(--warning)',
+              padding: '1.375rem 1.625rem',
+              transition: 'box-shadow 0.18s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.boxShadow = 'var(--shadow-md)')}
+            onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontSize: '1rem', marginBottom: '0.35rem' }}>{gap.title}</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--warning)', fontWeight: 600, marginBottom: '0.25rem' }}>
+                  Status: {gap.status}
+                </p>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginBottom: '0.875rem' }}>{gap.date}</p>
+                <span className="source-ref">
+                  <FileText size={11} /> {gap.source} — p.{gap.page}
+                </span>
               </div>
-              <span className="badge badge-warning">ATTENTION</span>
-            </div>
-            
-            <div className="pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
-              <span className="source-evidence inline-flex items-center gap-1 cursor-pointer hover:underline">
-                <FileText className="w-3 h-3" /> Source: {gap.source} (Page {gap.page})
-              </span>
+              <span className="badge badge-warning" style={{ flexShrink: 0 }}>Attention</span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="p-4 rounded-md flex gap-3 text-sm items-start" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-        <AlertTriangle className="w-5 h-5 text-muted flex-shrink-0" />
-        <div className="text-secondary">
-          <strong>Important Clinical Note:</strong> This tool only detects items explicitly documented as pending, requested, or awaited. It does not claim something was medically missed or dictate clinical care. 
-        </div>
+      <div style={{
+        display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
+        padding: '1rem 1.25rem', borderRadius: 'var(--r-md)',
+        background: 'var(--clinical-blue)', border: '1px solid var(--clinical-blue-border)',
+      }}>
+        <AlertTriangle size={15} color="var(--clinical-blue-text)" style={{ flexShrink: 0, marginTop: 2 }} />
+        <p style={{ fontSize: '0.8375rem', color: 'var(--clinical-blue-text)', margin: 0, lineHeight: 1.6 }}>
+          <strong>Clinical Note:</strong> This tool only surfaces items explicitly documented as pending or requested. It does not claim something was medically missed or dictate clinical care.
+        </p>
       </div>
     </div>
   );

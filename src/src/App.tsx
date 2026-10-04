@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import {
-  Activity, LayoutDashboard, Users, FileUp, Clock,
+  LayoutDashboard, Users, FileUp, Clock,
   RefreshCw, Pill, ListChecks, AlertTriangle, AlertOctagon,
-  MessageSquare, FileText, History, Settings, LogOut, User as UserIcon
+  MessageSquare, FileText, LogOut, User as UserIcon,
+  Activity, ChevronRight
 } from 'lucide-react';
 
 import Dashboard from './pages/Dashboard';
@@ -14,23 +15,12 @@ import PatientView from './pages/PatientView';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
-interface NavItemLink {
-  type: 'link';
-  path: string;
-  label: string;
-  icon: any;
-}
-
-interface NavItemDivider {
-  type: 'divider';
-}
-
+interface NavItemLink { type: 'link'; path: string; label: string; icon: any; badge?: string; }
+interface NavItemDivider { type: 'divider'; label?: string; }
 type NavItem = NavItemLink | NavItemDivider;
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('auth') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('auth') === 'true');
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -47,125 +37,150 @@ function App() {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/login"  element={<Login  onLogin={handleLogin} />} />
         <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
 
-  // If we are in a patient route, we want to show patient-specific sidebar links
   const isPatientRoute = location.pathname.startsWith('/patient/');
   const patientId = isPatientRoute ? location.pathname.split('/')[2] : null;
 
-  const globalNavItems: NavItemLink[] = [
-    { type: 'link', path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { type: 'link', path: '/patients', label: 'Patients', icon: Users },
-    { type: 'link', path: '/upload', label: 'Upload Records', icon: FileUp },
+  const globalNavItems: NavItem[] = [
+    { type: 'link', path: '/',         label: 'Overview',        icon: LayoutDashboard },
+    { type: 'link', path: '/patients', label: 'Patients',        icon: Users },
+    { type: 'link', path: '/upload',   label: 'Upload Records',  icon: FileUp },
   ];
 
-  const patientNavItems: NavItemLink[] = [
-    { type: 'link', path: `/patient/${patientId}/timeline`, label: 'Timeline', icon: Clock },
-    { type: 'link', path: `/patient/${patientId}/what-changed`, label: 'What Changed?', icon: RefreshCw },
-    { type: 'link', path: `/patient/${patientId}/medications`, label: 'Medications', icon: Pill },
-    { type: 'link', path: `/patient/${patientId}/investigations`, label: 'Investigations', icon: ListChecks },
-    { type: 'link', path: `/patient/${patientId}/care-gaps`, label: 'Care Gaps', icon: AlertTriangle },
-    { type: 'link', path: `/patient/${patientId}/contradictions`, label: 'Contradictions', icon: AlertOctagon },
-    { type: 'link', path: `/patient/${patientId}/assistant`, label: 'AI Assistant', icon: MessageSquare },
-    { type: 'link', path: `/patient/${patientId}/briefs`, label: 'Generate Brief', icon: FileText },
-    { type: 'link', path: `/patient/${patientId}/audit`, label: 'Audit / Review', icon: History },
+  const patientNavItems: NavItem[] = [
+    { type: 'divider', label: 'Patient View' },
+    { type: 'link', path: `/patient/${patientId}/timeline`,       label: 'Timeline',         icon: Clock },
+    { type: 'link', path: `/patient/${patientId}/what-changed`,   label: 'What Changed',     icon: RefreshCw, badge: '3' },
+    { type: 'link', path: `/patient/${patientId}/medications`,    label: 'Medications',      icon: Pill },
+    { type: 'link', path: `/patient/${patientId}/investigations`, label: 'Investigations',   icon: ListChecks },
+    { type: 'link', path: `/patient/${patientId}/care-gaps`,      label: 'Follow-ups',       icon: AlertTriangle },
+    { type: 'link', path: `/patient/${patientId}/contradictions`, label: 'Consistency',      icon: AlertOctagon },
+    { type: 'link', path: `/patient/${patientId}/assistant`,      label: 'AI Assistant',     icon: MessageSquare },
+    { type: 'link', path: `/patient/${patientId}/briefs`,         label: 'Generate Brief',   icon: FileText },
   ];
 
-  const navItems: NavItem[] = isPatientRoute ? [...globalNavItems, { type: 'divider' }, ...patientNavItems] : globalNavItems;
+  const navItems: NavItem[] = isPatientRoute
+    ? [...globalNavItems, ...patientNavItems]
+    : globalNavItems;
 
   return (
-    <div className="flex min-h-screen w-full relative">
+    <div className="app-shell">
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col h-screen sticky top-0 flex-shrink-0 glass z-20 border-r" style={{ borderColor: 'var(--border-light)' }}>
-        <div className="p-6 flex items-center gap-3 border-b" style={{ borderColor: 'var(--border-light)' }}>
-          <div className="w-10 h-10 rounded-md flex items-center justify-center" style={{ backgroundColor: 'var(--primary-light)' }}>
-            <Activity className="w-6 h-6 text-teal" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold m-0" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>MedBrief AI</h1>
-            <p className="text-xs text-secondary font-medium">Clinical Continuity</p>
-          </div>
+      <aside className="sidebar">
+        {/* Logo */}
+        <div className="sidebar-logo-area">
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: 8,
+              background: 'linear-gradient(135deg, var(--teal) 0%, #0D9EA0 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+            }}>
+              <Activity size={17} color="#fff" strokeWidth={2.5} />
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: '1rem', color: '#fff', lineHeight: 1.1 }}>MedBrief</div>
+              <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600, letterSpacing: '0.04em' }}>AI</div>
+            </div>
+          </Link>
         </div>
 
-        <nav className="flex-1 p-4 flex flex-col gap-1 overflow-y-auto">
+        {/* Nav */}
+        <nav className="sidebar-nav">
           {navItems.map((item, idx) => {
             if (item.type === 'divider') {
-              return <div key={`div-${idx}`} className="my-2 border-b" style={{ borderColor: 'var(--border)' }}></div>;
+              return (
+                <div key={`div-${idx}`}>
+                  <div className="sidebar-divider" />
+                  {item.label && <div className="sidebar-section-label">{item.label}</div>}
+                </div>
+              );
             }
-
             const Icon = item.icon;
-            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.endsWith(item.path));
-
+            const isActive = location.pathname === item.path
+              || (item.path !== '/' && item.path !== '/patients' && item.path !== '/upload' && location.pathname.startsWith(item.path));
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-150 text-sm font-medium"
-                style={{
-                  backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
-                  color: isActive ? 'var(--primary-text)' : 'var(--text-secondary)',
-                  textDecoration: 'none'
-                }}
+                className={`sidebar-link ${isActive ? 'active' : ''}`}
               >
-                <Icon className="w-5 h-5" style={{ color: isActive ? 'var(--primary-text)' : 'var(--text-muted)' }} />
-                {item.label}
+                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {item.badge && (
+                  <span style={{
+                    background: 'var(--teal)', color: '#fff',
+                    fontSize: '0.65rem', fontWeight: 700,
+                    padding: '1px 6px', borderRadius: 99,
+                    fontFamily: 'Manrope'
+                  }}>{item.badge}</span>
+                )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t" style={{ borderColor: 'var(--border)' }}>
-          <div className="flex flex-col gap-1">
-            <Link to="/settings" className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-secondary hover:bg-slate-50 transition-colors" style={{ textDecoration: 'none' }}>
-              <Settings className="w-4 h-4" /> Settings
-            </Link>
-            <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-secondary hover:bg-slate-50 transition-colors border-none bg-transparent cursor-pointer w-full text-left">
-              <LogOut className="w-4 h-4" /> Logout
-            </button>
+        {/* Footer */}
+        <div className="sidebar-footer">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.75rem', padding: '0.5rem 0.875rem' }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.12)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+            }}>
+              <UserIcon size={15} color="rgba(255,255,255,0.7)" />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'rgba(255,255,255,0.9)', lineHeight: 1.2 }}>Dr. Sunita Sharma</div>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>Cardiology</div>
+            </div>
           </div>
+          <button onClick={handleLogout} className="sidebar-link" style={{ width: '100%' }}>
+            <LogOut size={15} />
+            <span>Sign out</span>
+          </button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen relative">
-        {/* Top bar */}
-        <header className="h-20 border-b glass sticky top-0 z-10 flex items-center justify-between px-8 flex-shrink-0" style={{ borderColor: 'var(--border-light)' }}>
-          <div>
+      {/* Main */}
+      <div className="main-content">
+        {/* Topbar */}
+        <header className="topbar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
             {isPatientRoute && (
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <span className="text-secondary">Current Patient:</span>
-                <span className="text-primary bg-primary-light px-2 py-1 rounded-md" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary-text)' }}>Rahul Mehta (ID: RM-8492)</span>
-              </div>
+              <>
+                <span>Patients</span>
+                <ChevronRight size={14} />
+                <span style={{ color: 'var(--text-body)', fontWeight: 600 }}>Rahul Mehta (ID: {patientId})</span>
+              </>
             )}
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right text-sm">
-              <p className="font-semibold text-primary m-0" style={{ color: 'var(--text-primary)' }}>Dr. Sunita Sharma</p>
-              <p className="text-muted text-xs m-0">Cardiology</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border" style={{ borderColor: 'var(--border)' }}>
-              <UserIcon className="w-5 h-5 text-secondary" />
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Link to="/upload" className="btn btn-sm btn-primary" style={{ textDecoration: 'none' }}>
+              <FileUp size={14} />
+              Upload Records
+            </Link>
           </div>
         </header>
 
-        <div className="flex-1 p-8">
-          <div className="container mx-auto animate-fade-in">
+        {/* Page content */}
+        <div className="page-content">
+          <div style={{ padding: '2rem 2.5rem', maxWidth: 1280, margin: '0 auto' }}>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/patients" element={<PatientList />} />
+              <Route path="/"             element={<Dashboard />} />
+              <Route path="/patients"     element={<PatientList />} />
               <Route path="/patients/new" element={<CreatePatient />} />
-              <Route path="/upload" element={<Upload />} />
+              <Route path="/upload"       element={<Upload />} />
               <Route path="/patient/:id/*" element={<PatientView />} />
             </Routes>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

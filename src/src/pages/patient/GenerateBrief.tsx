@@ -1,29 +1,27 @@
 import { useState } from 'react';
-import { Copy, FileDown, Check, Save, Sparkles, FileQuestion } from 'lucide-react';
+import { Copy, FileDown, Check, Save, Sparkles, AlertTriangle, FileText } from 'lucide-react';
 
-export default function GenerateBrief() {
-  const [activeType, setActiveType] = useState('handover');
-  const [copied, setCopied] = useState(false);
+const briefTypes = [
+  { id: 'handover',  label: '60-Second Handover' },
+  { id: 'referral',  label: 'Referral Brief' },
+  { id: 'discharge', label: 'Discharge Summary' },
+];
 
-  const copyToClipboard = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+const briefs: Record<string, string> = {
+  handover: `PATIENT: Rahul Mehta (58yo, Male) | ID: RM-8492
 
-  const briefs = {
-    'handover': `PATIENT: Rahul Mehta (58yo, Male) | ID: RM-8492
-    
 RELEVANT HISTORY:
-- Coronary Artery Disease (Angiogram Mar 2024 - Mild CAD)
+- Coronary Artery Disease (Angiogram Mar 2024 – Mild CAD)
 - Hypertension
 
 RECENT MAJOR EVENTS:
-- 28 Sep 2026: Elective Admission for Right Inguinal Hernia repair. Procedure completed successfully.
+- 28 Sep 2026: Elective Admission for Right Inguinal Hernia repair.
+  Procedure completed successfully.
 
 CURRENT MEDICATIONS:
 - Metoprolol 50mg OD (increased from 25mg on 14 Sep)
 - Paracetamol 1g QDS (started 29 Sep)
-- Atorvastatin stopped (due to myalgia)
+- Atorvastatin STOPPED (due to myalgia)
 
 RECENT INVESTIGATIONS:
 - Pre-op Bloods (28 Sep): Normal
@@ -32,50 +30,51 @@ RECENT INVESTIGATIONS:
 
 DOCUMENTED PENDING ITEMS:
 - Post-op Surgical Follow-up (approx 2 weeks)
-- Cardiology review for hypertension mentioned but not booked.
+- Cardiology review for hypertension – mentioned but not booked
 
 IMPORTANT RECORDS TO REVIEW:
 - Op_Note_2026.pdf (Page 2)`,
 
-    'referral': `PATIENT INFORMATION
+  referral: `PATIENT INFORMATION
 Name: Rahul Mehta
 DOB: 12 Apr 1968 (Age 58)
 ID: RM-8492
 
 REASON FOR REFERRAL
-Routine Post-Operative Surgical Follow-up and Cardiology Review
+Routine post-operative surgical follow-up and cardiology review.
 
 RELEVANT DOCUMENTED HISTORY
-The patient has a background of hypertension and mild CAD (diagnosed Mar 2024). He was recently admitted on 28 Sep 2026 for an elective right inguinal hernia repair.
+Background of hypertension and mild CAD (diagnosed Mar 2024).
+Recently admitted 28 Sep 2026 for elective right inguinal hernia repair.
 
 RECENT EVENTS
-The hernia repair was uncomplicated. During a prior outpatient clinic on 14 Sep 2026, his Metoprolol was increased from 25mg to 50mg for persistent hypertension, and Atorvastatin was discontinued due to myalgia. 
+Uncomplicated hernia repair. Metoprolol increased from 25mg to 50mg OD
+(14 Sep 2026) for persistent hypertension. Atorvastatin discontinued.
 
 MEDICATION HISTORY
 - Metoprolol 50mg OD
 - Paracetamol 1g QDS
 
 DOCUMENTED PENDING ITEMS
-- Wound swab culture from 30 Sep 2026 is pending.
-- A cardiology review was requested but not formally booked.
+- Wound swab culture (30 Sep 2026): Pending
+- Cardiology review: Requested, not formally booked
 
 SOURCE REFERENCES
 - Outpatient_Clinic_2026.pdf (Page 3)
 - Op_Note_2026.pdf (Page 2)`,
 
-    'discharge': `DISCHARGE SUMMARY
+  discharge: `DISCHARGE SUMMARY
 
 PATIENT INFORMATION
-Name: Rahul Mehta
-ID: RM-8492
-DOB: 12 Apr 1968
+Name: Rahul Mehta | ID: RM-8492 | DOB: 12 Apr 1968
 
 ADMISSION DETAILS
 Admitted: 28 Sep 2026
 Reason: Elective Right Inguinal Hernia Repair
 
 DOCUMENTED CLINICAL COURSE
-The patient underwent an uncomplicated right inguinal hernia repair on 29 Sep 2026. Post-operative recovery was standard. 
+Uncomplicated right inguinal hernia repair on 29 Sep 2026.
+Post-operative recovery was standard.
 
 INVESTIGATIONS
 - Pre-op bloods (28 Sep 2026): Normal
@@ -83,85 +82,151 @@ INVESTIGATIONS
 - Wound swab (30 Sep 2026): Pending culture
 
 MEDICATION CHANGES
-- Paracetamol 1g QDS started post-op.
-- Note: Metoprolol was recently increased to 50mg OD on 14 Sep 2026 prior to admission. Atorvastatin remains held.
+- Paracetamol 1g QDS started post-op
+- Metoprolol recently increased to 50mg OD (14 Sep 2026)
+- Atorvastatin remains held
 
 DOCUMENTED FOLLOW-UP
-- Surgical review in 2 weeks.
-- Advised to follow up with GP regarding pending cardiology review for hypertension.
+- Surgical review in 2 weeks
+- GP follow-up for cardiology review re: hypertension
 
 OUTSTANDING ITEMS
-- Wound swab culture results.`
+- Wound swab culture results pending`,
+};
+
+export default function GenerateBrief() {
+  const [activeType, setActiveType] = useState('handover');
+  const [content, setContent] = useState(briefs[activeType]);
+  const [copied, setCopied] = useState(false);
+  const [approved, setApproved] = useState(false);
+
+  const handleTabChange = (id: string) => {
+    setActiveType(id);
+    setContent(briefs[id]);
+    setApproved(false);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="flex flex-col gap-6 min-h-full pb-8 animate-fade-in">
-      <header>
-        <h1 className="text-3xl mb-2">Generate Clinical Brief</h1>
-        <p className="text-secondary text-lg m-0">Create structured, evidence-grounded drafts for review.</p>
-      </header>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingBottom: '2rem' }}>
 
-      <div className="flex gap-4 mb-2">
-        {[
-          { id: 'handover', label: '60-Second Handover' },
-          { id: 'referral', label: 'Referral Brief' },
-          { id: 'discharge', label: 'Discharge Summary' }
-        ].map(type => (
+      {/* Header */}
+      <div className="page-header" style={{ marginBottom: 0 }}>
+        <h1>Generate Clinical Brief</h1>
+        <p>Create structured, evidence-grounded drafts. Review and approve before use.</p>
+      </div>
+
+      {/* Tab switcher */}
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        {briefTypes.map(t => (
           <button
-            key={type.id}
-            onClick={() => setActiveType(type.id)}
-            className="px-5 py-2.5 rounded-md font-medium text-sm transition-all border"
+            key={t.id}
+            onClick={() => handleTabChange(t.id)}
             style={{
-              backgroundColor: activeType === type.id ? 'var(--primary-light)' : 'var(--bg-surface)',
-              color: activeType === type.id ? 'var(--primary-text)' : 'var(--text-secondary)',
-              borderColor: activeType === type.id ? 'var(--primary-light)' : 'var(--border)'
+              padding: '0.5625rem 1.125rem', borderRadius: 'var(--r-md)',
+              border: `1px solid ${activeType === t.id ? 'var(--teal)' : 'var(--border)'}`,
+              background: activeType === t.id ? 'var(--teal-light)' : 'var(--surface)',
+              color: activeType === t.id ? 'var(--teal)' : 'var(--text-secondary)',
+              fontFamily: 'Manrope', fontWeight: 600, fontSize: '0.875rem',
+              cursor: 'pointer', transition: 'all 0.15s',
             }}
           >
-            {type.label}
+            {t.label}
           </button>
         ))}
       </div>
 
-      <div className="surface flex flex-col h-full min-h-[500px]">
-        <div className="p-4 border-b flex justify-between items-center bg-slate-50" style={{ borderColor: 'var(--border)' }}>
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue" />
-            <span className="badge badge-ai">AI DRAFT</span>
+      {/* Editor + toolbar */}
+      <div style={{
+        background: 'var(--surface)', border: '1px solid var(--border)',
+        borderRadius: 'var(--r-xl)', overflow: 'hidden',
+        boxShadow: 'var(--shadow-sm)',
+      }}>
+        {/* Toolbar */}
+        <div style={{
+          padding: '0.875rem 1.25rem', background: 'var(--surface-3)',
+          borderBottom: '1px solid var(--border)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--teal-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={13} color="var(--teal)" />
+            </div>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-secondary)', fontFamily: 'Manrope' }}>
+              AI Draft · {approved ? 'Approved' : 'Awaiting Review'}
+            </span>
+            {approved && <span className="badge badge-success"><Check size={10} /> Approved</span>}
           </div>
-          <div className="flex gap-2">
-            <button className="btn btn-secondary !py-1.5 !text-sm">
-              <Save className="w-4 h-4" /> Save Draft
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-sm btn-secondary" onClick={handleCopy}>
+              {copied ? <><Check size={13} /> Copied</> : <><Copy size={13} /> Copy</>}
             </button>
-            <button onClick={copyToClipboard} className="btn btn-secondary !py-1.5 !text-sm">
-              {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}
-              {copied ? 'Copied' : 'Copy'}
+            <button className="btn btn-sm btn-secondary">
+              <Save size={13} /> Save Draft
             </button>
-            <button className="btn btn-secondary !py-1.5 !text-sm">
-              <FileDown className="w-4 h-4" /> Export PDF
+            <button className="btn btn-sm btn-secondary">
+              <FileDown size={13} /> Export PDF
             </button>
-            <button className="btn btn-primary !py-1.5 !text-sm ml-2">
-              <Check className="w-4 h-4" /> Approve
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => setApproved(true)}
+              style={{ background: approved ? 'var(--success)' : 'var(--teal)' }}
+            >
+              <Check size={13} /> {approved ? 'Approved' : 'Approve'}
             </button>
           </div>
         </div>
-        
-        <div className="flex-1 p-6 relative">
-          <textarea 
-            className="w-full h-full p-4 border rounded-md font-mono text-sm leading-relaxed focus:outline-none focus:ring-2"
-            style={{ 
-              borderColor: 'var(--border)', 
-              backgroundColor: '#FAFAFA',
-              color: 'var(--text-primary)',
-              resize: 'none'
+
+        {/* Text area */}
+        <div style={{ padding: '1.5rem' }}>
+          <textarea
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            style={{
+              width: '100%', minHeight: 420, resize: 'vertical',
+              border: '1px solid var(--border)', borderRadius: 'var(--r-md)',
+              padding: '1.25rem', fontFamily: "'DM Mono', 'Fira Code', monospace",
+              fontSize: '0.875rem', lineHeight: 1.8,
+              color: 'var(--text-body)', background: 'var(--surface-2)',
+              outline: 'none', transition: 'border-color 0.15s',
             }}
-            defaultValue={briefs[activeType as keyof typeof briefs]}
+            onFocus={e => (e.target.style.borderColor = 'var(--teal)')}
+            onBlur={e => (e.target.style.borderColor = 'var(--border)')}
           />
         </div>
-        
-        <div className="p-4 border-t bg-slate-50" style={{ borderColor: 'var(--border)' }}>
-          <div className="flex gap-3 text-sm items-start p-3 rounded-md" style={{ backgroundColor: 'var(--warning-bg)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <FileQuestion className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#92400E' }} />
-            <p className="m-0" style={{ color: '#92400E' }}><strong>Review Required:</strong> This draft was generated by AI from the uploaded documents. Please review and edit for clinical accuracy before formal use or approval.</p>
+
+        {/* Disclaimer */}
+        <div style={{
+          margin: '0 1.5rem 1.5rem', padding: '0.875rem 1.125rem',
+          background: 'var(--warning-bg)', border: '1px solid var(--warning-border)',
+          borderRadius: 'var(--r-md)', display: 'flex', gap: '0.625rem', alignItems: 'flex-start',
+        }}>
+          <AlertTriangle size={15} color="var(--warning)" style={{ flexShrink: 0, marginTop: 2 }} />
+          <p style={{ fontSize: '0.8125rem', color: 'var(--warning)', margin: 0, lineHeight: 1.6 }}>
+            <strong>Review Required:</strong> This draft was generated by AI from uploaded documents. Please review and edit for clinical accuracy before formal use or approval.
+          </p>
+        </div>
+
+        {/* Source references */}
+        <div style={{
+          margin: '0 1.5rem 1.5rem', padding: '0.875rem 1.125rem',
+          background: 'var(--clinical-blue)', border: '1px solid var(--clinical-blue-border)',
+          borderRadius: 'var(--r-md)',
+        }}>
+          <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--clinical-blue-text)', fontFamily: 'Manrope', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.5rem' }}>
+            Source Documents Used
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {['Surgical_Admit_2026.pdf', 'Outpatient_Clinic_2026.pdf', 'Op_Note_2026.pdf', 'Discharge_Summary_Draft.pdf'].map(src => (
+              <span key={src} className="source-ref">
+                <FileText size={11} /> {src}
+              </span>
+            ))}
           </div>
         </div>
       </div>

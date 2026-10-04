@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Activity, Mail, Lock, User, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle, ArrowRight, Activity, Shield, CheckCircle2 } from 'lucide-react';
 
 export default function Signup({ onLogin }: { onLogin: () => void }) {
   const [name, setName] = useState('');
@@ -17,153 +17,158 @@ export default function Signup({ onLogin }: { onLogin: () => void }) {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Conflict: Passwords do not match. Please ensure both passwords are identical.');
+      setError('Passwords do not match. Please ensure both fields are identical.');
       return;
     }
-
     if (password.length < 8) {
-      setError('Conflict: Password must be at least 8 characters long.');
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+    if (email === 'admin@medbrief.ai') {
+      setError('An account with this email already exists. Try signing in instead.');
       return;
     }
 
     setIsLoading(true);
-
-    // Simulate API call and validation
     setTimeout(() => {
-      if (email === 'admin@medbrief.ai') {
-        setError('Conflict: An account with this email already exists.');
-        setIsLoading(false);
-      } else {
-        setIsSuccess(true);
-        setTimeout(() => {
-          onLogin();
-          navigate('/');
-        }, 1500);
-      }
-    }, 1000);
+      setIsSuccess(true);
+      setTimeout(() => { onLogin(); navigate('/'); }, 1400);
+    }, 900);
   };
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-        <div className="max-w-md w-full glass-surface overflow-hidden p-10 text-center animate-scale-in">
-          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle2 className="w-8 h-8 text-green-600" />
+      <div style={{
+        minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'var(--bg)',
+      }}>
+        <div className="animate-scale-in" style={{ textAlign: 'center', maxWidth: 360 }}>
+          <div style={{
+            width: 64, height: 64, borderRadius: '50%', background: 'var(--success-bg)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem',
+          }}>
+            <CheckCircle2 size={30} color="var(--success)" />
           </div>
-          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Account Created!</h2>
-          <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>Welcome aboard, {name}. Taking you to your dashboard...</p>
+          <h2 style={{ marginBottom: '0.5rem' }}>Welcome, {name.split(' ')[0]}!</h2>
+          <p style={{ color: 'var(--text-secondary)' }}>Your account is ready. Taking you to the dashboard…</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-      <div className="max-w-md w-full glass-surface overflow-hidden animate-scale-in">
-        <div className="p-8">
-          <div className="flex justify-center mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-light)' }}>
-              <Activity className="w-7 h-7 text-teal" style={{ color: 'var(--primary)' }} />
-            </div>
+    <div style={{
+      minHeight: '100dvh', display: 'grid', gridTemplateColumns: '1fr 1fr',
+      fontFamily: "'DM Sans', sans-serif",
+    }}>
+      {/* Left panel */}
+      <div style={{
+        background: 'linear-gradient(145deg, var(--navy) 0%, #1A3A5C 100%)',
+        padding: '3rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: 9,
+            background: 'linear-gradient(135deg, var(--teal) 0%, #0D9EA0 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Activity size={19} color="#fff" strokeWidth={2.5} />
           </div>
-          
-          <h2 className="text-2xl font-bold text-center mb-2" style={{ color: 'var(--text-primary)' }}>Create an account</h2>
-          <p className="text-center mb-6" style={{ color: 'var(--text-secondary)' }}>Join MedBrief AI today</p>
+          <div style={{ fontFamily: 'Manrope', fontWeight: 800, fontSize: '1.125rem', color: '#fff' }}>MedBrief <span style={{ color: 'var(--teal)' }}>AI</span></div>
+        </div>
+
+        <div>
+          <h1 style={{
+            fontFamily: 'Manrope', color: '#fff',
+            fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 800,
+            lineHeight: 1.2, letterSpacing: '-0.03em', marginBottom: '1.25rem',
+          }}>
+            Clinical continuity,<br />
+            <span style={{ color: 'var(--teal)' }}>finally clear.</span>
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1rem', lineHeight: 1.65, maxWidth: 360 }}>
+            Join MedBrief AI and start turning your patient's scattered records into a single, evidence-grounded clinical view.
+          </p>
+        </div>
+
+        <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.75rem' }}>
+          © 2026 MedBrief AI. For demonstration purposes only.
+        </p>
+      </div>
+
+      {/* Right panel — form */}
+      <div style={{
+        background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem',
+      }}>
+        <div style={{ width: '100%', maxWidth: 400 }} className="animate-scale-in">
+          <div style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '1.625rem', marginBottom: '0.35rem' }}>Create an account</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>
+              Start your MedBrief AI journey today.
+            </p>
+          </div>
 
           {error && (
-            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-100 flex gap-3 items-start animate-fade-in">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-700 m-0 leading-relaxed font-medium">{error}</p>
+            <div className="animate-fade-in" style={{
+              display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
+              padding: '0.875rem 1rem', borderRadius: 'var(--r-md)',
+              background: 'var(--danger-bg)', border: '1px solid var(--danger-border)',
+              marginBottom: '1.25rem',
+            }}>
+              <AlertCircle size={16} color="var(--danger)" style={{ flexShrink: 0, marginTop: 2 }} />
+              <p style={{ fontSize: '0.875rem', color: 'var(--danger)', margin: 0, lineHeight: 1.5 }}>{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Full Name</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-all bg-white"
-                  placeholder="Dr. Sarah Johnson"
-                  required
-                />
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-heading)' }}>Full Name</label>
+              <div style={{ position: 'relative' }}>
+                <User size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <input type="text" value={name} onChange={e => setName(e.target.value)} className="input-field" style={{ paddingLeft: '2.375rem' }} placeholder="Dr. Sarah Johnson" required />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Email address</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-all bg-white"
-                  placeholder="sarah@hospital.org"
-                  required
-                />
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-heading)' }}>Email address</label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="input-field" style={{ paddingLeft: '2.375rem' }} placeholder="sarah@hospital.org" required />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Password</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-all bg-white"
-                  placeholder="••••••••"
-                  required
-                />
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-heading)' }}>Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="input-field" style={{ paddingLeft: '2.375rem' }} placeholder="Min 8 characters" required />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Confirm Password</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-all bg-white"
-                  placeholder="••••••••"
-                  required
-                />
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.4rem', color: 'var(--text-heading)' }}>Confirm Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={16} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="input-field" style={{ paddingLeft: '2.375rem' }} placeholder="••••••••" required />
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white transition-all mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
-              style={{ backgroundColor: 'var(--primary)' }}
-            >
-              {isLoading ? 'Creating account...' : 'Create account'}
-              {!isLoading && <ArrowRight className="w-4 h-4" />}
+            <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem' }}>
+              {isLoading ? 'Creating account…' : 'Create account'}
+              {!isLoading && <ArrowRight size={15} />}
             </button>
           </form>
-        </div>
-        
-        <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 text-center">
-          <p className="text-sm m-0" style={{ color: 'var(--text-secondary)' }}>
+
+          <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', padding: '0.75rem 1rem', background: 'var(--mint)', borderRadius: 'var(--r-md)', border: '1px solid var(--mint-border)' }}>
+            <Shield size={14} color="var(--teal)" style={{ flexShrink: 0, marginTop: 2 }} />
+            <p style={{ fontSize: '0.775rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.55 }}>
+              <strong style={{ color: 'var(--text-heading)' }}>Privacy first.</strong> No identifiable health data is stored beyond your session.
+            </p>
+          </div>
+
+          <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
             Already have an account?{' '}
-            <Link to="/login" className="font-bold hover:underline" style={{ color: 'var(--primary)' }}>
-              Sign in
-            </Link>
+            <Link to="/login" style={{ color: 'var(--teal)', fontWeight: 600, textDecoration: 'none' }}>Sign in</Link>
           </p>
         </div>
       </div>

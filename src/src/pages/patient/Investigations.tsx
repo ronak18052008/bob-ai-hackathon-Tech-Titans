@@ -1,58 +1,86 @@
 import { mockPatient } from '../../data/patientData';
-import { ListChecks, FileText } from 'lucide-react';
+import { FileText, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+
+const statusConfig: Record<string, { label: string; badgeClass: string; icon: any; color: string }> = {
+  'Result Available': { label: 'Result Available', badgeClass: 'badge-success', icon: CheckCircle2, color: 'var(--success)' },
+  'Pending':          { label: 'Pending',           badgeClass: 'badge-warning', icon: Clock,          color: 'var(--warning)' },
+  'Awaited':          { label: 'Awaited',           badgeClass: 'badge-pending', icon: Clock,          color: 'var(--pending)' },
+};
 
 export default function Investigations() {
   const investigations = mockPatient.investigations;
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in pb-8">
-      <header>
-        <h1 className="text-3xl mb-2">Investigation Tracker</h1>
-        <p className="text-secondary text-lg m-0">Track documented laboratory and imaging studies.</p>
-      </header>
-
-      <div className="surface overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid var(--border)' }}>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Investigation</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Date</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Result Summary</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Source Evidence</th>
-            </tr>
-          </thead>
-          <tbody>
-            {investigations.map((inv, idx) => (
-              <tr 
-                key={idx} 
-                className="transition-colors hover:bg-slate-50"
-                style={{ borderBottom: '1px solid var(--border)' }}
-              >
-                <td className="p-4 font-semibold text-primary">{inv.name}</td>
-                <td className="p-4 text-sm text-secondary">{inv.date}</td>
-                <td className="p-4">
-                  <span className={`badge ${inv.status === 'Result Available' ? 'badge-success' : 'badge-warning'}`}>
-                    {inv.status}
-                  </span>
-                </td>
-                <td className="p-4 text-sm font-medium">{inv.result}</td>
-                <td className="p-4">
-                  <span className="source-evidence inline-flex items-center gap-1 cursor-pointer hover:underline">
-                    <FileText className="w-3 h-3" /> {inv.source}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', paddingBottom: '2rem' }}>
+      <div className="page-header" style={{ marginBottom: 0 }}>
+        <h1>Documented Follow-ups</h1>
+        <p>Investigations and tests mentioned in the uploaded records.</p>
       </div>
-      
-      <div className="p-4 rounded-md flex gap-3 text-sm items-start" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-        <ListChecks className="w-5 h-5 text-muted flex-shrink-0" />
-        <div className="text-secondary">
-          <strong>Note:</strong> Result summaries are extracted from unstructured notes. They may not represent the complete final verified report. Always view the source document for clinical decision-making.
-        </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+        {investigations.map((inv, idx) => {
+          const conf = statusConfig[inv.status] || { label: inv.status, badgeClass: 'badge-neutral', icon: AlertTriangle, color: 'var(--text-muted)' };
+          const Icon = conf.icon;
+          return (
+            <div
+              key={idx}
+              style={{
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 'var(--r-xl)', padding: '1.25rem 1.5rem',
+                display: 'flex', alignItems: 'center', gap: '1.25rem',
+                transition: 'all 0.18s',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-strong)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; }}
+            >
+              {/* Status icon */}
+              <div style={{
+                width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                background: conf.badgeClass === 'badge-success' ? 'var(--success-bg)' : conf.badgeClass === 'badge-warning' ? 'var(--warning-bg)' : 'var(--pending-bg)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Icon size={18} color={conf.color} />
+              </div>
+
+              {/* Main info */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: 'Manrope', fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-heading)', marginBottom: '0.175rem' }}>
+                  {inv.name}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
+                  {inv.result}
+                </div>
+              </div>
+
+              {/* Date */}
+              <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', flexShrink: 0 }}>
+                {inv.date}
+              </div>
+
+              {/* Status */}
+              <span className={`badge ${conf.badgeClass}`} style={{ flexShrink: 0 }}>
+                {conf.label}
+              </span>
+
+              {/* Source */}
+              <span className="source-ref" style={{ flexShrink: 0 }}>
+                <FileText size={11} /> {inv.source}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Disclaimer */}
+      <div style={{
+        display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
+        padding: '1rem 1.25rem', borderRadius: 'var(--r-md)',
+        background: 'var(--clinical-blue)', border: '1px solid var(--clinical-blue-border)',
+      }}>
+        <AlertTriangle size={15} color="var(--clinical-blue-text)" style={{ flexShrink: 0, marginTop: 2 }} />
+        <p style={{ fontSize: '0.8375rem', color: 'var(--clinical-blue-text)', margin: 0, lineHeight: 1.6 }}>
+          <strong>Note:</strong> Result summaries are extracted from unstructured notes. They may not represent the complete final report. Always view the source document for clinical decisions.
+        </p>
       </div>
     </div>
   );

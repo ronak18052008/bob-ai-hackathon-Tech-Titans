@@ -1,137 +1,172 @@
+import { useState } from 'react';
 import { mockPatient } from '../../data/patientData';
-import { PlusCircle, Activity, CheckCircle, Clock, FileText, AlertTriangle } from 'lucide-react';
+import { PlusCircle, Activity, CheckCircle2, Clock, FileText, AlertTriangle } from 'lucide-react';
+
+type TabId = 'new' | 'changed' | 'resolved' | 'pending';
+
+const tabs: { id: TabId; label: string; icon: any; color: string }[] = [
+  { id: 'new',      label: 'New',             icon: PlusCircle,   color: 'var(--teal)' },
+  { id: 'changed',  label: 'Changed',         icon: Activity,     color: 'var(--clinical-blue-text)' },
+  { id: 'resolved', label: 'Resolved',        icon: CheckCircle2, color: 'var(--success)' },
+  { id: 'pending',  label: 'Still Pending',   icon: Clock,        color: 'var(--warning)' },
+];
 
 export default function WhatChanged() {
+  const [activeTab, setActiveTab] = useState<TabId>('new');
   const data = mockPatient.whatChanged;
 
+  const counts: Record<TabId, number> = {
+    new:      data.newEvents.length + data.newDiagnoses.length,
+    changed:  data.changedMeds.length + data.newMeds.length,
+    resolved: data.resolved.length,
+    pending:  data.pending.length,
+  };
+
   return (
-    <div className="flex flex-col gap-8 animate-fade-in pb-8">
-      <header>
-        <h1 className="text-3xl mb-2">What Changed Since Previous Records?</h1>
-        <p className="text-secondary text-lg m-0">Comparing new uploads with existing patient history.</p>
-      </header>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* NEW SECTIONS */}
-        <div className="flex flex-col gap-6">
-          <section className="surface p-6">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--primary)' }}>
-              <PlusCircle className="w-5 h-5" /> New Documented Events & Diagnoses
-            </h2>
-            <div className="space-y-4">
-              {data.newEvents.map((item, i) => (
-                <div key={`event-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)' }}>
-                  <h3 className="text-base font-semibold m-0">{item.title}</h3>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-xs text-secondary">{item.date}</span>
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline">
-                      <FileText className="w-3 h-3" /> {item.source}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              {data.newDiagnoses.map((item, i) => (
-                <div key={`diag-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--primary-light)', border: '1px solid #99F6E4' }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="badge badge-primary">NEW DIAGNOSIS</span>
-                  </div>
-                  <h3 className="text-base font-semibold m-0" style={{ color: 'var(--primary-text)' }}>{item.title}</h3>
-                  <div className="flex justify-end mt-2">
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline" style={{ backgroundColor: '#FFFFFF' }}>
-                      <FileText className="w-3 h-3" /> {item.source}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      {/* Header */}
+      <div className="page-header" style={{ marginBottom: '0' }}>
+        <h1>What Changed?</h1>
+        <p>Comparing the latest records with the patient's previous history.</p>
+      </div>
 
-          <section className="surface p-6">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--warning)' }}>
-              <Clock className="w-5 h-5" /> Still Documented as Pending
-            </h2>
-            <div className="space-y-4">
-              {data.pending.map((item, i) => (
-                <div key={`pend-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--warning-bg)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                  <h3 className="text-base font-semibold m-0" style={{ color: '#92400E' }}>{item.title}</h3>
-                  <div className="flex justify-end mt-2">
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline" style={{ backgroundColor: '#FFFFFF', color: '#92400E' }}>
-                      <FileText className="w-3 h-3" /> {item.source}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.6rem 1.125rem', borderRadius: 'var(--r-md)',
+                border: `1px solid ${isActive ? tab.color : 'var(--border)'}`,
+                background: isActive ? `color-mix(in srgb, ${tab.color} 10%, white)` : 'var(--surface)',
+                color: isActive ? tab.color : 'var(--text-secondary)',
+                fontFamily: 'Manrope', fontWeight: 600, fontSize: '0.875rem',
+                cursor: 'pointer', transition: 'all 0.15s',
+              }}
+            >
+              <Icon size={14} />
+              {tab.label}
+              {counts[tab.id] > 0 && (
+                <span style={{
+                  background: isActive ? tab.color : 'var(--surface-3)',
+                  color: isActive ? '#fff' : 'var(--text-secondary)',
+                  borderRadius: 99, padding: '0 6px',
+                  fontSize: '0.7rem', fontWeight: 700, fontFamily: 'Manrope',
+                }}>{counts[tab.id]}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
 
-        {/* CHANGED / RESOLVED SECTIONS */}
-        <div className="flex flex-col gap-6">
-          <section className="surface p-6">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--accent)' }}>
-              <Activity className="w-5 h-5" /> Medication & Investigation Changes
-            </h2>
-            <div className="space-y-4">
-              {data.changedMeds.map((item, i) => (
-                <div key={`med-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--accent-light)', border: '1px solid #BFDBFE' }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base font-semibold m-0" style={{ color: '#1E3A8A' }}>{item.name}</h3>
-                    <span className="badge badge-ai bg-blue text-white">{item.status}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm mb-3" style={{ color: '#1E3A8A' }}>
-                    <span className="line-through opacity-70">{item.previous}</span>
-                    <span className="font-bold">→</span>
-                    <span className="font-bold">{item.current}</span>
-                  </div>
-                  <div className="flex justify-end">
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline" style={{ backgroundColor: '#FFFFFF' }}>
-                      <FileText className="w-3 h-3" /> {item.source}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              {data.newMeds.map((item, i) => (
-                <div key={`nmed-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)' }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base font-semibold m-0">{item.name}</h3>
-                    <span className="badge badge-success">NEW MEDICATION</span>
-                  </div>
-                  <div className="flex justify-end mt-2">
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline">
-                      <FileText className="w-3 h-3" /> {item.source}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      {/* Content */}
+      <div className="animate-fade-in" key={activeTab} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem', paddingBottom: '2rem' }}>
 
-          <section className="surface p-6">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--success)' }}>
-              <CheckCircle className="w-5 h-5" /> Resolved Items
-            </h2>
-            <div className="space-y-4">
-              {data.resolved.map((item, i) => (
-                <div key={`res-${i}`} className="p-4 rounded-md" style={{ backgroundColor: 'var(--success-bg)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-                  <h3 className="text-base font-semibold m-0" style={{ color: '#14532D' }}>{item.title}</h3>
-                  <p className="text-sm m-0 mt-1" style={{ color: '#14532D' }}>Result: {item.result}</p>
-                  <div className="flex justify-end mt-2">
-                    <span className="source-evidence flex items-center gap-1 cursor-pointer hover:underline" style={{ backgroundColor: '#FFFFFF', color: '#14532D' }}>
-                      <FileText className="w-3 h-3" /> {item.source}
+        {/* NEW */}
+        {activeTab === 'new' && (
+          <>
+            {[...data.newEvents.map(e => ({ ...e, kind: 'event' })), ...data.newDiagnoses.map(e => ({ ...e, kind: 'diagnosis' }))].map((item, i) => (
+              <div key={i} className="change-card change-card-new">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span className={item.kind === 'diagnosis' ? 'badge badge-teal' : 'badge badge-neutral'}>
+                      {item.kind === 'diagnosis' ? 'New Diagnosis' : 'New Event'}
                     </span>
+                    <h3 style={{ fontSize: '0.9375rem', margin: 0 }}>{item.title}</h3>
+                  </div>
+                  {'date' in item && <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{(item as any).date}</span>}
+                </div>
+                <span className="source-ref">
+                  <FileText size={11} /> {item.source}
+                </span>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* CHANGED */}
+        {activeTab === 'changed' && (
+          <>
+            {data.changedMeds.map((item, i) => (
+              <div key={i} className="change-card change-card-changed">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.625rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.375rem' }}>
+                      <span className="badge badge-ai">{item.status}</span>
+                      <h3 style={{ fontSize: '0.9375rem', margin: 0 }}>{item.name}</h3>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                      <span style={{ color: 'var(--text-muted)', textDecoration: 'line-through' }}>{item.previous}</span>
+                      <span style={{ color: 'var(--text-muted)' }}>→</span>
+                      <span style={{ fontWeight: 700, color: 'var(--text-heading)' }}>{item.current}</span>
+                    </div>
                   </div>
                 </div>
-              ))}
+                <span className="source-ref"><FileText size={11} /> {item.source}</span>
+              </div>
+            ))}
+            {data.newMeds.map((item, i) => (
+              <div key={`nm-${i}`} className="change-card change-card-new">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <span className="badge badge-teal">New Medication</span>
+                  <h3 style={{ fontSize: '0.9375rem', margin: 0 }}>{item.name}</h3>
+                </div>
+                <span className="source-ref"><FileText size={11} /> {item.source}</span>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* RESOLVED */}
+        {activeTab === 'resolved' && (
+          <>
+            {data.resolved.map((item, i) => (
+              <div key={i} className="change-card change-card-resolved">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontSize: '0.9375rem', margin: 0, color: 'var(--success)' }}>{item.title}</h3>
+                  <span className="badge badge-success">Resolved</span>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.625rem' }}>
+                  Result: {item.result}
+                </p>
+                <span className="source-ref"><FileText size={11} /> {item.source}</span>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* PENDING */}
+        {activeTab === 'pending' && (
+          <>
+            {data.pending.map((item, i) => (
+              <div key={i} className="change-card change-card-pending">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontSize: '0.9375rem', margin: 0 }}>{item.title}</h3>
+                  <span className="badge badge-warning">Pending</span>
+                </div>
+                <span className="source-ref"><FileText size={11} /> {item.source}</span>
+              </div>
+            ))}
+
+            {/* Undetermined notice */}
+            <div style={{
+              display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
+              padding: '1rem 1.25rem', borderRadius: 'var(--r-md)',
+              background: 'var(--surface-3)', border: '1px solid var(--border)',
+            }}>
+              <AlertTriangle size={16} color="var(--text-muted)" style={{ flexShrink: 0, marginTop: 2 }} />
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
+                <strong>Could not determine:</strong> The patient's exact current smoking status is not explicitly documented in the latest records.
+              </p>
             </div>
-          </section>
-          
-          <div className="p-4 rounded-md flex gap-3 text-sm items-start" style={{ backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)' }}>
-            <AlertTriangle className="w-5 h-5 text-muted flex-shrink-0" />
-            <div className="text-secondary">
-              <strong>Unable to determine:</strong> The patient's exact current smoking status is not explicitly documented in the latest records.
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,66 +1,118 @@
 import { mockPatient } from '../../data/patientData';
 import { Pill, FileText, AlertTriangle } from 'lucide-react';
 
+const changeTypeStyle: Record<string, { badge: string; badgeClass: string }> = {
+  'Dose Increased': { badge: 'Dose Increased', badgeClass: 'badge-warning' },
+  'Discontinued':   { badge: 'Discontinued',   badgeClass: 'badge-danger' },
+  'New':            { badge: 'Newly Added',     badgeClass: 'badge-teal' },
+  'No change':      { badge: 'No Change',       badgeClass: 'badge-neutral' },
+};
+
 export default function MedicationRadar() {
   const medications = mockPatient.medications;
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in pb-8">
-      <header>
-        <h1 className="text-3xl mb-2">Medication Change Radar</h1>
-        <p className="text-secondary text-lg m-0">Detected changes in medication documentation.</p>
-      </header>
-
-      <div className="surface overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid var(--border)' }}>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Medication</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Previous</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Current</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Change</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Date</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Source Evidence</th>
-            </tr>
-          </thead>
-          <tbody>
-            {medications.map((med, idx) => (
-              <tr 
-                key={idx} 
-                className="transition-colors group hover:bg-slate-50"
-                style={{ 
-                  borderBottom: '1px solid var(--border)',
-                  backgroundColor: med.conflict ? 'var(--warning-bg)' : 'transparent'
-                }}
-              >
-                <td className="p-4 font-semibold text-primary">
-                  {med.name}
-                  {med.conflict && (
-                    <div className="flex items-center gap-1 text-xs mt-1" style={{ color: '#92400E' }}>
-                      <AlertTriangle className="w-3 h-3" /> Conflict detected
-                    </div>
-                  )}
-                </td>
-                <td className="p-4 text-sm text-secondary">{med.previous}</td>
-                <td className="p-4 text-sm font-medium text-teal">{med.current}</td>
-                <td className="p-4 text-sm font-medium">{med.change}</td>
-                <td className="p-4 text-sm text-muted">{med.date}</td>
-                <td className="p-4">
-                  <span className="source-evidence inline-flex items-center gap-1 cursor-pointer hover:underline">
-                    <FileText className="w-3 h-3" /> {med.source}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', paddingBottom: '2rem' }}>
+      <div className="page-header" style={{ marginBottom: 0 }}>
+        <h1>Medication Changes</h1>
+        <p>Changes in medication documentation detected across uploaded records.</p>
       </div>
-      
-      <div className="p-4 rounded-md flex gap-3 text-sm items-start" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-        <Pill className="w-5 h-5 text-muted flex-shrink-0" />
-        <div className="text-secondary">
-          <strong>Important:</strong> MedBrief AI only reports what is documented. It does not interpret whether a medication change is medically appropriate. Always verify against primary sources.
-        </div>
+
+      {/* Medication cards */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {medications.map((med, idx) => {
+          const style = changeTypeStyle[med.change] || { badge: med.change, badgeClass: 'badge-neutral' };
+          return (
+            <div
+              key={idx}
+              style={{
+                background: 'var(--surface)',
+                border: `1px solid ${med.conflict ? 'var(--warning-border)' : 'var(--border)'}`,
+                borderRadius: 'var(--r-xl)',
+                padding: '1.375rem 1.625rem',
+                borderLeft: `4px solid ${med.conflict ? 'var(--warning)' : med.change === 'Discontinued' ? 'var(--danger)' : med.change === 'New' ? 'var(--teal)' : 'var(--clinical-blue-text)'}`,
+                transition: 'box-shadow 0.18s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.boxShadow = 'var(--shadow-md)')}
+              onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                {/* Left: name + before/after */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.625rem' }}>
+                    <div style={{
+                      width: 32, height: 32, borderRadius: 8,
+                      background: 'var(--teal-light)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      <Pill size={15} color="var(--teal)" />
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: '1rem', margin: 0 }}>{med.name}</h3>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{med.date}</span>
+                    </div>
+                  </div>
+
+                  {/* Before → After */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.375rem' }}>
+                    <div style={{
+                      padding: '0.375rem 0.875rem', borderRadius: 'var(--r-sm)',
+                      background: 'var(--surface-3)', border: '1px solid var(--border)',
+                    }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.1rem' }}>PREVIOUS</div>
+                      <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-secondary)', textDecoration: med.change !== 'No change' ? 'line-through' : 'none' }}>{med.previous}</div>
+                    </div>
+                    {med.change !== 'No change' && (
+                      <>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '1.25rem' }}>→</span>
+                        <div style={{
+                          padding: '0.375rem 0.875rem', borderRadius: 'var(--r-sm)',
+                          background: 'var(--teal-light)', border: '1px solid var(--teal-mid)',
+                        }}>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--teal)', fontWeight: 600, marginBottom: '0.1rem' }}>CURRENT</div>
+                          <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--teal)' }}>{med.current}</div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right: badge + source */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.75rem', flexShrink: 0 }}>
+                  <span className={`badge ${style.badgeClass}`}>{style.badge}</span>
+                  <span className="source-ref">
+                    <FileText size={11} /> {med.source}
+                  </span>
+                </div>
+              </div>
+
+              {/* Conflict warning */}
+              {med.conflict && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  marginTop: '0.875rem', padding: '0.625rem 0.875rem',
+                  background: 'var(--warning-bg)', border: '1px solid var(--warning-border)',
+                  borderRadius: 'var(--r-sm)', fontSize: '0.8125rem', color: 'var(--warning)',
+                }}>
+                  <AlertTriangle size={13} />
+                  <strong>Inconsistency detected:</strong> Different values appear in two records. Please verify.
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Disclaimer */}
+      <div style={{
+        display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
+        padding: '1rem 1.25rem', borderRadius: 'var(--r-md)',
+        background: 'var(--clinical-blue)', border: '1px solid var(--clinical-blue-border)',
+      }}>
+        <Pill size={15} color="var(--clinical-blue-text)" style={{ flexShrink: 0, marginTop: 2 }} />
+        <p style={{ fontSize: '0.8375rem', color: 'var(--clinical-blue-text)', margin: 0, lineHeight: 1.6 }}>
+          <strong>Documentation only.</strong> MedBrief AI reports what is documented and does not interpret whether a medication change is clinically appropriate. Always verify against the original source.
+        </p>
       </div>
     </div>
   );

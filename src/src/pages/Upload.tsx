@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UploadCloud, File, X, CheckCircle, ShieldCheck, Check } from 'lucide-react';
+import { UploadCloud, X, CheckCircle2, ShieldCheck, FileText, Check } from 'lucide-react';
+
+const stages = [
+  { label: 'Reading documents',            icon: '📄' },
+  { label: 'Extracting clinical information', icon: '🔍' },
+  { label: 'Building timeline',            icon: '📅' },
+  { label: 'Comparing records',            icon: '🔄' },
+  { label: 'Checking consistency',         icon: '⚖️' },
+  { label: 'Preparing evidence',           icon: '📎' },
+  { label: 'Generating clinical brief',    icon: '✨' },
+];
 
 export default function Upload() {
   const [dragActive, setDragActive] = useState(false);
@@ -9,169 +19,219 @@ export default function Upload() {
   const [currentStage, setCurrentStage] = useState(0);
   const navigate = useNavigate();
 
-  const stages = [
-    "Upload received",
-    "Extracting text",
-    "Processing OCR",
-    "Detecting clinical entities",
-    "Extracting dates and events",
-    "Identifying medications",
-    "Identifying investigations",
-    "Building patient timeline",
-    "Comparing previous records",
-    "Generating evidence-grounded brief"
-  ];
-
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault(); e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
-    else if (e.type === "dragleave") setDragActive(false);
+    if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
+    else if (e.type === 'dragleave') setDragActive(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault(); e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFiles(Array.from(e.dataTransfer.files));
-    }
+    if (e.dataTransfer.files[0]) handleFiles(Array.from(e.dataTransfer.files));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      handleFiles(Array.from(e.target.files));
-    }
+    if (e.target.files?.[0]) handleFiles(Array.from(e.target.files));
   };
 
   const handleFiles = (newFiles: File[]) => {
-    const validTypes = ['application/pdf', 'text/plain', 'image/jpeg', 'image/png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    const validFiles = newFiles.filter(file => validTypes.includes(file.type) || file.name.endsWith('.docx'));
-    setFiles(prev => [...prev, ...validFiles]);
+    const valid = ['application/pdf', 'text/plain', 'image/jpeg', 'image/png',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    setFiles(prev => [...prev, ...newFiles.filter(f => valid.includes(f.type) || f.name.endsWith('.docx'))]);
   };
 
-  const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
-  };
+  const removeFile = (i: number) => setFiles(prev => prev.filter((_, idx) => idx !== i));
 
   const processFiles = () => {
-    if (files.length === 0) return;
+    if (!files.length) return;
     setIsProcessing(true);
     setCurrentStage(0);
   };
 
   useEffect(() => {
-    if (isProcessing && currentStage < stages.length) {
-      const timer = setTimeout(() => {
-        setCurrentStage(prev => prev + 1);
-      }, 600); // 600ms per stage for demo purposes
-      return () => clearTimeout(timer);
-    } else if (isProcessing && currentStage >= stages.length) {
-      const timer = setTimeout(() => {
-        navigate('/patient/RM-8492/what-changed'); 
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (!isProcessing) return;
+    if (currentStage < stages.length) {
+      const t = setTimeout(() => setCurrentStage(p => p + 1), 700);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => navigate('/patient/RM-8492/what-changed'), 1200);
+      return () => clearTimeout(t);
     }
-  }, [isProcessing, currentStage, navigate, stages.length]);
+  }, [isProcessing, currentStage, navigate]);
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl mx-auto min-h-full animate-fade-in pb-8">
-      <header className="mb-6 text-center">
-        <h1 className="text-3xl font-bold mb-2 text-primary">Upload Patient Records</h1>
-        <p className="text-secondary text-lg">Add previous admissions, discharge summaries, lab reports, referral letters, and clinical notes.</p>
-      </header>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: 760, margin: '0 auto', paddingBottom: '3rem' }} className="animate-fade-in">
+
+      {/* Header */}
+      <div style={{ textAlign: 'center' }}>
+        <h1 style={{ marginBottom: '0.5rem' }}>Bring the patient's records together.</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: 520, margin: '0 auto' }}>
+          Upload multiple documents and let MedBrief organize the clinical story.
+        </p>
+      </div>
 
       {!isProcessing ? (
-        <div className="surface-lg p-8 relative">
-          <div className="mb-8 p-4 rounded-md text-sm flex gap-3 items-start" style={{ backgroundColor: 'var(--success-bg)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-            <ShieldCheck className="w-5 h-5 text-success flex-shrink-0" />
-            <div style={{ color: '#14532d' }}>
-              <strong>Privacy First:</strong> Uploaded records are processed in memory and are not persisted to disk. No identifiable health information is stored after your session ends.
+        <div style={{
+          background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 'var(--r-2xl)', boxShadow: 'var(--shadow-md)', overflow: 'hidden',
+        }}>
+          {/* Privacy notice */}
+          <div style={{
+            padding: '0.875rem 1.5rem',
+            background: 'var(--mint)', borderBottom: '1px solid var(--mint-border)',
+            display: 'flex', alignItems: 'center', gap: '0.625rem',
+          }}>
+            <ShieldCheck size={15} color="var(--teal)" style={{ flexShrink: 0 }} />
+            <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+              <strong style={{ color: 'var(--text-heading)' }}>Privacy first.</strong> Records are processed in memory and are not stored after your session ends.
+            </p>
+          </div>
+
+          <div style={{ padding: '2rem' }}>
+            {/* Drop zone */}
+            <div
+              onDragEnter={handleDrag} onDragLeave={handleDrag}
+              onDragOver={handleDrag} onDrop={handleDrop}
+              style={{
+                border: `2px dashed ${dragActive ? 'var(--teal)' : 'var(--border)'}`,
+                borderRadius: 'var(--r-xl)',
+                padding: '3rem 2rem', textAlign: 'center',
+                background: dragActive ? 'var(--teal-light)' : 'var(--surface-3)',
+                transition: 'all 0.2s var(--ease)',
+              }}
+            >
+              <div style={{
+                width: 56, height: 56, borderRadius: 14,
+                background: dragActive ? 'var(--teal)' : 'var(--surface)',
+                border: `1px solid ${dragActive ? 'var(--teal)' : 'var(--border)'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 1.25rem',
+                transition: 'all 0.2s',
+                boxShadow: 'var(--shadow-sm)',
+              }}>
+                <UploadCloud size={24} color={dragActive ? '#fff' : 'var(--text-muted)'} />
+              </div>
+              <h3 style={{ fontSize: '1.125rem', marginBottom: '0.4rem' }}>
+                {dragActive ? 'Drop files here' : 'Drag & drop patient records'}
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
+                Supports PDF, JPG, PNG, TXT, DOCX
+              </p>
+              <input type="file" id="file-upload" multiple accept=".pdf,.txt,.jpg,.png,.docx" style={{ display: 'none' }} onChange={handleChange} />
+              <label htmlFor="file-upload" className="btn btn-secondary" style={{ cursor: 'pointer', display: 'inline-flex' }}>
+                Browse Files
+              </label>
             </div>
-          </div>
 
-          <div 
-            className="rounded-xl p-10 flex flex-col items-center justify-center text-center transition-all"
-            style={{ 
-              border: `2px dashed ${dragActive ? 'var(--primary)' : 'var(--border)'}`, 
-              backgroundColor: dragActive ? 'var(--primary-light)' : 'var(--bg-main)' 
-            }}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-          >
-            <UploadCloud className="w-16 h-16 mb-4" style={{ color: dragActive ? 'var(--primary)' : 'var(--text-muted)' }} />
-            <h3 className="text-xl mb-2 text-primary font-semibold">Drag & drop files here</h3>
-            <p className="text-secondary text-sm mb-6 font-medium">Supported formats: PDF, JPG, PNG, TXT, DOCX</p>
-            
-            <input type="file" id="file-upload" multiple accept=".pdf,.txt,.jpg,.png,.docx" className="hidden" onChange={handleChange} />
-            <label htmlFor="file-upload" className="btn btn-secondary cursor-pointer bg-white">
-              Browse Files
-            </label>
-          </div>
-
-          {files.length > 0 && (
-            <div className="mt-8 animate-fade-in">
-              <h4 className="text-sm font-semibold text-secondary mb-3 uppercase tracking-wider">Ready to process ({files.length})</h4>
-              <div className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-2">
-                {files.map((file, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 rounded-md" style={{ backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)' }}>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md" style={{ backgroundColor: 'var(--primary-light)' }}>
-                        <File className="w-5 h-5 text-teal" />
+            {/* File list */}
+            {files.length > 0 && (
+              <div style={{ marginTop: '1.5rem' }}>
+                <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', fontFamily: 'Manrope', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
+                  Ready to process ({files.length})
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', maxHeight: 240, overflowY: 'auto' }}>
+                  {files.map((file, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex', alignItems: 'center', gap: '0.875rem',
+                      padding: '0.75rem 1rem', borderRadius: 'var(--r-md)',
+                      background: 'var(--surface-3)', border: '1px solid var(--border)',
+                    }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--teal-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <FileText size={15} color="var(--teal)" />
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-primary m-0">{file.name}</p>
-                        <p className="text-xs text-muted m-0 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB &middot; Ready</p>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file.name}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</div>
                       </div>
+                      <button onClick={() => removeFile(idx)} style={{
+                        border: 'none', background: 'transparent', cursor: 'pointer',
+                        color: 'var(--text-muted)', padding: '0.25rem', borderRadius: 6,
+                        display: 'flex', alignItems: 'center',
+                        transition: 'color 0.15s, background 0.15s',
+                      }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--danger)'; (e.currentTarget as HTMLElement).style.background = 'var(--danger-bg)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                      >
+                        <X size={15} />
+                      </button>
                     </div>
-                    <button 
-                      onClick={() => removeFile(idx)}
-                      className="p-2 text-muted rounded-md transition-colors bg-transparent border-none cursor-pointer"
-                      onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--danger)'; e.currentTarget.style.backgroundColor = 'var(--danger-bg)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.backgroundColor = 'transparent'; }}
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.25rem' }}>
+                  <button onClick={processFiles} className="btn btn-primary">
+                    <CheckCircle2 size={15} /> Process Records
+                  </button>
+                </div>
               </div>
-
-              <div className="mt-8 flex justify-end">
-                <button onClick={processFiles} className="btn btn-primary px-8">
-                  <CheckCircle className="w-4 h-4" /> Process Records
-                </button>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       ) : (
-        <div className="surface-lg p-10 flex flex-col items-center justify-center animate-fade-in min-h-[400px]">
-          <h2 className="text-2xl font-bold mb-8 text-primary">Processing Medical Records</h2>
-          
-          <div className="w-full max-w-md flex flex-col gap-4">
-            {stages.map((stage, idx) => (
-              <div 
-                key={idx} 
-                className={`flex items-center gap-4 transition-all duration-300 ${
-                  idx < currentStage ? 'opacity-100 translate-y-0' : 
-                  idx === currentStage ? 'opacity-100 translate-y-0' : 
-                  'opacity-0 translate-y-4 hidden'
-                }`}
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-500 ${
-                  idx < currentStage ? 'bg-green-100 text-green-600' : 
-                  'bg-blue-100 text-blue-600 border-2 border-blue-600 border-r-transparent animate-spin'
-                }`}
-                style={idx < currentStage ? { backgroundColor: 'var(--success-bg)', color: 'var(--success)' } : {}}
-                >
-                  {idx < currentStage ? <Check className="w-5 h-5" /> : <div className="w-full h-full rounded-full border-2 border-accent border-r-transparent animate-spin"></div>}
+        /* Processing state */
+        <div style={{
+          background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 'var(--r-2xl)', boxShadow: 'var(--shadow-md)',
+          padding: '3rem 2rem', textAlign: 'center',
+        }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <h2 style={{ marginBottom: '0.5rem' }}>Processing Medical Records</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>
+              MedBrief is reading and organising your patient's clinical story.
+            </p>
+          </div>
+
+          {/* Progress bar */}
+          <div style={{
+            height: 4, background: 'var(--surface-3)', borderRadius: 99,
+            margin: '0 auto 2.5rem', maxWidth: 480, overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%', borderRadius: 99, background: 'var(--teal)',
+              width: `${Math.min(100, (currentStage / stages.length) * 100)}%`,
+              transition: 'width 0.6s var(--ease)',
+            }} />
+          </div>
+
+          {/* Stage list */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: 440, margin: '0 auto', textAlign: 'left' }}>
+            {stages.map((stage, idx) => {
+              const done = idx < currentStage;
+              const active = idx === currentStage;
+              if (!done && !active) return null;
+              return (
+                <div key={idx} className="animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', opacity: done ? 0.7 : 1 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: done ? 'var(--success-bg)' : 'var(--teal-light)',
+                    border: `1px solid ${done ? 'var(--success-border)' : 'var(--teal-mid)'}`,
+                    fontSize: '0.875rem',
+                  }}>
+                    {done ? <Check size={15} color="var(--success)" /> : <span>{stage.icon}</span>}
+                  </div>
+                  <span style={{
+                    fontSize: '0.9375rem', fontWeight: active ? 700 : 500,
+                    color: active ? 'var(--text-heading)' : 'var(--text-secondary)',
+                    fontFamily: active ? 'Manrope' : 'inherit',
+                  }}>
+                    {stage.label}
+                  </span>
+                  {active && (
+                    <div style={{ display: 'flex', gap: '4px', marginLeft: 'auto' }}>
+                      {[0, 1, 2].map(d => (
+                        <div key={d} className="typing-dot" style={{ animationDelay: `${d * 180}ms`, background: 'var(--teal)' }} />
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <span className={`text-sm font-medium ${idx < currentStage ? 'text-secondary' : 'text-primary font-bold'}`}>
-                  {stage}
-                </span>
+              );
+            })}
+            {currentStage >= stages.length && (
+              <div className="animate-scale-in" style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--success)', fontFamily: 'Manrope', fontWeight: 700, fontSize: '1.0625rem' }}>
+                ✓ Your patient's clinical brief is ready!
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}
