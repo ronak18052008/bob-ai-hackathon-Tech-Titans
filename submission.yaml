@@ -3,11 +3,11 @@
 # =============================================================================
 
 team:
-  name: "Orion Squad"                             # REQUIRED
+  name: Tech Titans                             # REQUIRED
   track: "AI"                                     # REQUIRED 
   lead:
-    name: "REPLACE_BEFORE_SUBMISSION"             # REQUIRED
-    email: "REPLACE_BEFORE_SUBMISSION"            # REQUIRED
+    name: Ronak Marvaniya             # REQUIRED
+    email: ronakmarvaniya1805@gmail.com           # REQUIRED
   members:
     - name: "REPLACE_BEFORE_SUBMISSION"           # REQUIRED
       email: "REPLACE_BEFORE_SUBMISSION"
