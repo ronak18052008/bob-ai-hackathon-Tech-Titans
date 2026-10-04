@@ -28,7 +28,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+      <div className="max-w-md w-full glass-surface overflow-hidden animate-scale-in">
         <div className="p-8">
           <div className="flex justify-center mb-8">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-light)' }}>

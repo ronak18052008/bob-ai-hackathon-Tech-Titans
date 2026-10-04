@@ -79,10 +79,10 @@ function App() {
   const navItems: NavItem[] = isPatientRoute ? [...globalNavItems, { type: 'divider' }, ...patientNavItems] : globalNavItems;
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--bg-main)' }}>
+    <div className="flex min-h-screen w-full relative">
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col h-full flex-shrink-0" style={{ backgroundColor: '#FFFFFF', borderRight: '1px solid var(--border)' }}>
-        <div className="p-6 flex items-center gap-3 border-b" style={{ borderColor: 'var(--border)' }}>
+      <aside className="w-64 flex flex-col h-screen sticky top-0 flex-shrink-0 glass z-20 border-r" style={{ borderColor: 'var(--border-light)' }}>
+        <div className="p-6 flex items-center gap-3 border-b" style={{ borderColor: 'var(--border-light)' }}>
           <div className="w-10 h-10 rounded-md flex items-center justify-center" style={{ backgroundColor: 'var(--primary-light)' }}>
             <Activity className="w-6 h-6 text-teal" />
           </div>
@@ -132,9 +132,9 @@ function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-h-screen relative">
         {/* Top bar */}
-        <header className="h-16 border-b bg-white flex items-center justify-between px-8 flex-shrink-0" style={{ borderColor: 'var(--border)' }}>
+        <header className="h-20 border-b glass sticky top-0 z-10 flex items-center justify-between px-8 flex-shrink-0" style={{ borderColor: 'var(--border-light)' }}>
           <div>
             {isPatientRoute && (
               <div className="flex items-center gap-2 text-sm font-medium">
@@ -154,8 +154,8 @@ function App() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-8">
-          <div className="container mx-auto animate-fade-in min-h-full">
+        <div className="flex-1 p-8">
+          <div className="container mx-auto animate-fade-in">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/patients" element={<PatientList />} />

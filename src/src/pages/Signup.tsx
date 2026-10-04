@@ -46,7 +46,7 @@ export default function Signup({ onLogin }: { onLogin: () => void }) {
   if (isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden p-10 text-center animate-fade-in border border-slate-100">
+        <div className="max-w-md w-full glass-surface overflow-hidden p-10 text-center animate-scale-in">
           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
             <CheckCircle2 className="w-8 h-8 text-green-600" />
           </div>
@@ -59,7 +59,7 @@ export default function Signup({ onLogin }: { onLogin: () => void }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg-main)' }}>
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+      <div className="max-w-md w-full glass-surface overflow-hidden animate-scale-in">
         <div className="p-8">
           <div className="flex justify-center mb-6">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--primary-light)' }}>

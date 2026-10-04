@@ -9,10 +9,10 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-8 min-h-full">
-      <header className="flex justify-between items-end">
+      <header className="flex justify-between items-end animate-fade-in">
         <div>
-          <h1 className="text-3xl mb-2" style={{ color: 'var(--text-primary)' }}>Good morning, Dr. Sharma</h1>
-          <p className="text-secondary text-lg m-0">Review patient records faster with evidence-grounded clinical summaries.</p>
+          <h1 className="text-4xl mb-2 text-gradient">Good morning, Dr. Sharma</h1>
+          <p className="text-secondary text-lg m-0 font-medium">Review patient records faster with evidence-grounded clinical summaries.</p>
         </div>
         <Link to="/upload" className="btn btn-primary">
           <FileUp className="w-4 h-4" /> Upload New Records
@@ -27,7 +27,7 @@ export default function Dashboard() {
           { label: 'Documents Processed', value: '3,842', icon: FileText, color: 'text-blue', bg: 'var(--accent-light)' },
           { label: 'Pending Review Items', value: '12', icon: CheckSquare, color: 'text-danger', bg: 'var(--danger-bg)' },
         ].map((stat, idx) => (
-          <div key={idx} className="surface p-5 flex items-center gap-4">
+          <div key={idx} className="glass-surface p-5 flex items-center gap-4 animate-scale-in" style={{ animationDelay: `${idx * 0.1}s` }}>
             <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: stat.bg }}>
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
             </div>
@@ -49,7 +49,7 @@ export default function Dashboard() {
             </Link>
           </div>
           
-          <div className="surface overflow-hidden">
+          <div className="glass-surface overflow-hidden animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="flex flex-col">
               {recentPatients.map((patient, idx) => (
                 <Link 
@@ -85,7 +85,7 @@ export default function Dashboard() {
         {/* Recent Changes & Alerts */}
         <div className="flex flex-col gap-4">
           <h2 className="text-xl font-semibold m-0">Recent Changes Alerts</h2>
-          <div className="surface p-5 flex flex-col gap-4 h-full">
+          <div className="glass-surface p-5 flex flex-col gap-4 h-full animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="p-3 rounded-md flex gap-3 items-start" style={{ backgroundColor: 'var(--warning-bg)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <Activity className="w-5 h-5 text-warning flex-shrink-0" />
               <div>
