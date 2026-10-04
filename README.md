@@ -1,6 +1,4 @@
-# 🚀 [Your Project Title Here]
-
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+# 🚀 MedBrief AI
 
 ---
 
@@ -8,37 +6,31 @@
 
 | Field | Value |
 |---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+| **Team Name** | Tech Titans |
+| **Track** | AI |
+| **Team Lead** | Ronak Marvaniya — 250170107078@vgecg.ac.in |
+| **Members** | Henil Koladiya, Darsh Joshi, Vaishvi Khamar, Aryan Agola, Khush Chandrala |
 
 ---
 
 ## 🎯 Problem Statement
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
-
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
+Doctors spend about two hours per day reading and summarising records for ward rounds, referrals, and discharges. Complex patients may have 50–200 pages across multiple admissions. Important events, medication changes, and pending investigations can be buried in unstructured notes. Referral letters written from memory can omit information and contribute to repeated investigations and avoidable readmissions.
 
 ---
 
 ## 💡 Solution
 
-> In 2–3 sentences: What did you build? How does it solve the problem above?
-
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
-
+MedBrief is a clinical documentation assistant that helps clinicians review a patient record and prepare evidence-linked summaries. It extracts chronological events and highlights critical details, ensuring all generated facts are directly linked to the source documentation for clinician verification.
 ---
 
 ## ✨ Key Features
 
-- **Feature 1:** [Brief description — e.g., "Real-time anomaly detection using watsonx.ai"]
-- **Feature 2:** [Brief description]
-- **Feature 3:** [Brief description]
-- **Feature 4:** [Optional]
-- **Feature 5:** [Optional]
-
+- **Intelligent Summarisation:** Different output modes for ward-round summaries, referral letters, and discharge summaries. 
+- **Source Referencing:** Extracted facts are mapped back to their original source document and page.
+- **Clinical Timeline:** Automatically chronologizes events from scattered unstructured notes.
+- **Medication Tracking:** Identifies medication changes (starts/stops) and outstanding investigations.
+- **MCP Integration:** Exposes tools for IBM Bob to perform patient record summarisation seamlessly.
 ---
 
 ## 🛠️ Tech Stack
@@ -106,16 +98,13 @@ cp .env.example .env
 
 ## ⚠️ Known Limitations
 
-> Be honest — judges appreciate transparency over overclaiming.
-
-- [Limitation 1: e.g., "Authentication is mocked — not production-ready"]
-- [Limitation 2: e.g., "Only tested on Chrome"]
-- [Limitation 3: e.g., "Feature X is scaffolded but not fully implemented"]
+The demo runs in a local deterministic mode using synthetic patient data to ensure no real PHI is exposed. 
+- The MCP server is implemented and functional as a protocol, but requires valid IBM watsonx.ai credentials to process unseen live files. 
 
 ---
 
 ## 🏅 What We're Most Proud Of
 
-[Tell the judges what part of your submission is strongest and worth paying close attention to.]
+We are most proud of our strict adherence to clinical safety principles. Rather than acting as a diagnostic "black box," MedBrief is designed to be a verifiable assistant. It refuses to invent sources, explicitly flags conflicting data, and prioritises clinician review above complete automation.
 
 ---
