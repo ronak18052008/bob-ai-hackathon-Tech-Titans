@@ -25,15 +25,11 @@ jobs:
 
     - name: Install Frontend Dependencies
       working-directory: src/frontend
-      run: npm install --legacy-peer-deps
+      run: npm install
 
     - name: Build Frontend
       working-directory: src/frontend
-      run: |
-        echo "=== Directory contents ==="
-        ls -la
-        echo "=== Running build ==="
-        npx vite build --debug
+      run: npm run build
 
     - name: Install Python Dependencies
       run: |
