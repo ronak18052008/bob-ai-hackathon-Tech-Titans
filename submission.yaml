@@ -3,22 +3,22 @@
 # =============================================================================
 
 team:
-  name: Tech Titans                             
+  name: "Tech Titans"                             
   track: "AI"                                  
   lead:
-    name: Ronak Marvaniya             
-    email: ronakmarvaniya1805@gmail.com          
+    name: "Ronak Marvaniya"            
+    email: "ronakmarvaniya1805@gmail.com"          
   members:
-    - name: Henil Koladiya           
-      email: koladiyahenil08@gmail.com
-    - name: Darsh Joshi         
-      email: 250170107047@vgecg.ac.in
-    - name: Vaishvi Khamar          
-      email: vaishvi.khamar@gmail.com
-    - name: Aryan Agola           
-      email: aryanagola7@gmail.com
-    - name: Khush Chandrala           
-      email: 250170107015@vgecg.ac.in
+    - name: "Henil Koladiya"          
+      email: "koladiyahenil08@gmail.com"
+    - name: "Darsh Joshi"         
+      email: "250170107047@vgecg.ac.in"
+    - name: "Vaishvi Khamar"          
+      email: "vaishvi.khamar@gmail.com"
+    - name: "Aryan Agola"           
+      email: "aryanagola7@gmail.com"
+    - name: "Khush Chandrala"           
+      email: "250170107015@vgecg.ac.in"
       
 
 submission:
@@ -40,11 +40,11 @@ submission:
     - "IBM Bob MCP Server integration for AI-powered summarisation workflows"
 
   tech_stack:
-    languages: ["TypeScript", "JavaScript", "HTML", "CSS"]                   
-    frameworks: ["React", "Vite"]                     
-    ibm_technologies: ["IBM Bob", "watsonx.ai"]               
+    languages: "TypeScript", "JavaScript", "HTML", "CSS"                 
+    frameworks: "React", "Vite"                   
+    ibm_technologies: "IBM Bob", "watsonx.ai"           
     databases: []                      
-    other: ["MCP (Model Context Protocol)"]                          
+    other: "MCP (Model Context Protocol)"                         
 
   what_we_are_most_proud_of: >         
     The strict adherence to clinical safety, ensuring AI-generated facts are cross-referenced 
