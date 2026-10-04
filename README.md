@@ -11,13 +11,13 @@
 |---|---|
 | **Team Name** | Tech Titans |
 | **Track** | AI |
-| **Team Lead** | Ronak — ronak18052008@gmail.com |
+| **Team Lead** | Ronak — ronakmarvaniya1805@gmail.com |
 | **Members** | Agola Aryan Jitendrabhai, Khamar Vaishvi Bhavinkumar, Koladiya Henil Shantibhai, Joshi Darsh Pravinbhai, Chandrala Khush Sumeshbhai |
 
 ### Team Members & Roles
 | Name | Email | Responsibility |
 |---|---|---|
-| **Ronak** (Lead) | `ronak18052008@gmail.com` | Full-Stack Architecture, IBM Granite 3.0 & watsonx Pipeline |
+| **Ronak** (Lead) | `ronakmarvaniya1805@gmail.com` | Full-Stack Architecture, IBM Granite 3.0 & watsonx Pipeline |
 | **Agola Aryan Jitendrabhai** | `aryanagola7@gmail.com` | Multimodal OCR Engine & Clinical Entity Extraction |
 | **Khamar Vaishvi Bhavinkumar** | `vaishvi.khamar@gmail.com` | Longitudinal Knowledge Graph & Timeline Reconstruction |
 | **Koladiya Henil Shantibhai** | `koladiyahenil08@gmail.com` | Documentation Conflict Surveillance & Clinical Gap Radar |
