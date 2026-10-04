@@ -1,79 +1,66 @@
 # Setup Guide
 
-> **This file is read by the automated evaluation pipeline. Be precise and complete.**
+This guide explains how to run the MedBrief application locally. 
 
 ## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- [ ] [e.g., Python 3.11+]
-- [ ] [e.g., Node.js 18+]
-- [ ] [e.g., Docker Desktop]
-- [ ] [e.g., An IBM Cloud account with watsonx.ai access]
+- Node.js (v18 or higher recommended)
+- npm (v9 or higher)
+- Optional: IBM Bob CLI (for testing the MCP Server)
 
 ## Environment Variables
-
-Copy `.env.example` to `.env` and fill in the values:
+Copy the `.env.example` file to `.env` in the `src/` directory.
 
 ```bash
+cd src
 cp .env.example .env
 ```
 
-| Variable | Description | Required |
-|---|---|---|
-| `WATSONX_API_KEY` | Your IBM watsonx.ai API key | Yes |
-| `WATSONX_PROJECT_ID` | Your watsonx.ai project ID | Yes |
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `SLACK_WEBHOOK_URL` | Slack webhook for alerts | No |
+The required variables are (dummy values are fine for local demo mode):
+- `VITE_DEMO_MODE=true`
+- `IBM_CLOUD_API_KEY=dummy-api-key-for-local-testing`
+- `WATSONX_PROJECT_ID=dummy-project-id-1234`
+- `WATSONX_URL=https://us-south.ml.cloud.ibm.com`
 
-## Installation
+## Running the Web Application (Frontend)
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/[your-org]/[your-repo].git
-cd [your-repo]
+1. Navigate to the `src/` directory:
+   ```bash
+   cd src
+   ```
 
-# 2. Install backend dependencies
-[your command — e.g.: pip install -r requirements.txt]
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# 3. Install frontend dependencies (if applicable)
-[your command — e.g.: cd frontend && npm install]
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-# 4. Set up the database (if applicable)
-[your command — e.g.: python manage.py migrate]
-```
+4. Open your browser and navigate to the URL provided in the terminal (usually `http://localhost:5173`).
 
-## Running the Application
+## Running the MCP Server for IBM Bob
 
-```bash
-# Start the backend
-[your command — e.g.: uvicorn app.main:app --reload]
+1. Navigate to the `src/mcp-server/` directory:
+   ```bash
+   cd src/mcp-server
+   ```
 
-# Start the frontend (in a separate terminal, if applicable)
-[your command — e.g.: cd frontend && npm run dev]
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The application will be available at: `http://localhost:[PORT]`
-
-## Running Tests
-
-```bash
-[your test command — e.g.: pytest tests/ -v]
-```
-
-## Quick Demo (Optional)
-
-If you have a demo script or sample data to showcase the project quickly:
-
-```bash
-[e.g.: python demo/seed_demo_data.py]
-[e.g.: open http://localhost:8000/demo]
-```
+3. To connect IBM Bob to the server, configure Bob to execute this Node script via stdio:
+   ```bash
+   node index.js
+   ```
 
 ## Troubleshooting
 
-| Issue | Solution |
-|---|---|
-| [e.g., `ModuleNotFoundError`] | [e.g., Run `pip install -r requirements.txt` again] |
-| [e.g., Database connection refused] | [e.g., Ensure PostgreSQL is running: `docker compose up db`] |
-| [e.g., watsonx.ai 401 error] | [e.g., Check `WATSONX_API_KEY` in your `.env` file] |
+| Error | Cause | Solution |
+|---|---|---|
+| `npm ERR! code ENOENT` | Running `npm install` in the wrong directory | Ensure you are inside the `src/` directory before running `npm install`. |
+| Port 5173 in use | Another application is running on Vite's default port | Vite will automatically use the next available port (e.g., 5174). Check the terminal output for the correct URL. |
+| MCP Server hanging | Running `node index.js` manually in a terminal | The MCP Server communicates over stdio. It will not output anything until it receives an MCP protocol JSON message. This is expected behaviour. Connect it via IBM Bob. |

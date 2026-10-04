@@ -1,49 +1,28 @@
 # Architecture
 
-## System Architecture
-
-[Describe the overall architecture of your system. Replace the Mermaid diagram below with your actual architecture.]
+## System Diagram
 
 ```mermaid
 graph TD
-    A[User / Browser] -->|HTTP| B[Frontend - React]
-    B -->|REST API| C[Backend - FastAPI]
-    C -->|SDK| D[watsonx.ai]
-    C -->|Query| E[PostgreSQL]
-    C -->|Publish| F[Slack Webhook]
-    D -->|Inference Result| C
+    A[Clinician Browser] -->|Upload Notes / View| B[React Frontend]
+    B -->|Generate Summary| C[Mocked Local Extraction / AI]
+    
+    D[IBM Bob CLI] -->|MCP Protocol| E[MedBrief MCP Server]
+    E -->|Summarize & Extract| F[watsonx.ai (Future Integration)]
 ```
 
-## Components
+## Component Table
 
 | Component | Technology | Responsibility |
 |---|---|---|
-| Frontend | [e.g., React 18] | [e.g., Dashboard UI, user interaction] |
-| Backend API | [e.g., FastAPI] | [e.g., Business logic, orchestration] |
-| AI / ML | [e.g., watsonx.ai] | [e.g., Anomaly scoring, classification] |
-| Database | [e.g., PostgreSQL] | [e.g., Storing pipeline events and scores] |
-| Notifications | [e.g., Slack API] | [e.g., Alerting on threshold breaches] |
+| **Frontend UI** | React, Vite, Vanilla CSS | Handles user interaction, file import simulation, state management, and display of verifiable facts. |
+| **MCP Server** | Node.js, `@modelcontextprotocol/sdk` | Exposes `summarize_record` and `extract_timeline` tools to IBM Bob. |
+| **AI Integration** | IBM watsonx.ai (Architecture ready) | Processes clinical text to extract structured events and draft summaries. |
 
 ## Data Flow
+1. **Frontend Flow:** In the current demo, the React app uses synthetic deterministic data to simulate processing without risking PHI exposure. It renders the timeline, summaries, and source documents directly in the browser.
+2. **MCP Flow:** An external agent (like IBM Bob) connects to the MedBrief MCP Server via stdio. Bob can send raw patient text to the `summarize_record` tool, which formats the request and returns a structured, safe draft for Bob to present to the user.
 
-[Describe how data moves through your system from input to output.]
-
-1. [e.g., Pipeline logs are ingested via a webhook from GitHub Actions]
-2. [e.g., Logs are preprocessed and chunked into 512-token segments]
-3. [e.g., Each chunk is sent to the watsonx.ai inference endpoint]
-4. [e.g., Anomaly scores are stored in PostgreSQL]
-5. [e.g., The React dashboard polls the API every 30 seconds to refresh]
-
-## Security Considerations
-
-[Note any security decisions relevant to the architecture — even if basic.]
-
-- [e.g., API keys stored in environment variables, never committed to git]
-- [e.g., All API routes require a Bearer token]
-- [e.g., Database credentials rotated via IBM Secrets Manager]
-
-## Scalability Notes
-
-[Optional: how would this scale beyond the hackathon prototype?]
-
-[e.g., "The FastAPI backend is stateless and could be horizontally scaled behind a load balancer. The watsonx.ai calls are the bottleneck and would benefit from request batching."]
+## Security & Privacy Notes
+- **Zero Persistence:** In production, no uploaded files or generated summaries are stored in a database. Data resides entirely in memory during the active session.
+- **Client-Side:** The web app currently runs fully client-side to enforce this privacy boundary during the hackathon.

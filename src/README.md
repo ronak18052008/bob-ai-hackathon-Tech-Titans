@@ -1,47 +1,15 @@
-# Source Code
+# Source Code Organization
 
-Place all your project's source code in this folder.
+This directory contains the core application code for MedBrief.
 
-## Structure Guidelines
+## Directory Structure
 
-Organize your code logically. Here are common patterns — use whatever fits
-your project:
+- `src/` - Contains the React frontend web application.
+  - `src/pages/` - Core views (Dashboard, Upload, PatientOverview).
+  - `index.css` - Custom design system and glassmorphism utilities.
+  - `main.tsx` - Application entry point.
+- `mcp-server/` - Contains the Node.js Model Context Protocol server exposing `summarize_record` and `extract_timeline` tools to IBM Bob.
 
-### Web Application
-```
-src/
-  backend/        ← API server code
-  frontend/       ← UI code
-  shared/         ← Shared utilities/types
-```
+## Setup
 
-### Data / AI Project
-```
-src/
-  data/           ← Data ingestion / preprocessing
-  models/         ← ML model code
-  api/            ← Serving layer
-  notebooks/      ← Jupyter notebooks (exploration)
-```
-
-### CLI / Script-based Tool
-```
-src/
-  cli/            ← CLI entry points
-  lib/            ← Core logic
-  utils/          ← Helpers
-```
-
-## Important Files to Include
-
-- `requirements.txt` or `package.json` — dependency manifest
-- `.env.example` — template for environment variables (NEVER commit `.env`)
-- Any database migration files
-- Configuration files
-
-## What NOT to Include in src/
-
-- `.env` files with real secrets
-- Large binary files (use Git LFS or link externally)
-- `node_modules/` or `venv/` (these are in `.gitignore`)
-- Build artifacts (`dist/`, `build/`, `__pycache__/`)
+Please refer to `../docs/setup-guide.md` for complete installation and running instructions.

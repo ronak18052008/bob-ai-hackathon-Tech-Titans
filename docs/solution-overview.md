@@ -1,41 +1,17 @@
 # Solution Overview
 
-## What We Built
+## Core Mechanism
+MedBrief is a clinical documentation assistant designed to synthesise unstructured patient notes into safe, reviewable summaries. 
 
-[Describe your solution in plain language. Avoid jargon — write as if explaining to a smart colleague unfamiliar with your tech stack.]
+Clinicians upload or select a patient record. MedBrief processes the text and extracts a chronological timeline of events, medication changes, and pending investigations. Crucially, it then generates targeted draft summaries (Ward Round, Referral, Discharge) where every extracted fact is heavily linked to its source document and page number.
 
-## How It Works
-
-[Explain the core mechanism step by step. A numbered list or simple flow works well here.]
-
-1. [Step 1: e.g., "User connects their GitHub repository via OAuth"]
-2. [Step 2: e.g., "The system ingests pipeline logs and feeds them to watsonx.ai"]
-3. [Step 3: e.g., "An anomaly score is computed and displayed on the dashboard"]
-4. [Step 4: e.g., "Alerts are sent to Slack when the score exceeds a threshold"]
-
-## Architecture Diagram
-
-> See [`architecture.md`](architecture.md) for the detailed diagram.
-
-[Optionally include a simple ASCII or Mermaid diagram here for quick reference.]
-
-```
-[User] → [Frontend: React] → [API: FastAPI] → [watsonx.ai] → [Dashboard]
-                                    ↓
-                             [PostgreSQL DB]
-```
+## Differentiation
+Unlike naive AI chatbots that simply ingest text and output an unverified answer, MedBrief treats the AI as a draft assistant. It is built on a **verifiable-first** design. If dates or medications conflict, MedBrief surfaces the conflict. It will not silently invent data to fill gaps.
 
 ## Key Design Decisions
+1. **Source Traceability:** The UI dedicates space to source documents, making it trivial for a doctor to click an extracted fact and verify the original clinical note.
+2. **Contextual Outputs:** We provide separate output modes (Ward Round vs. Discharge) because what matters for a handover is entirely different from what matters to a GP post-discharge.
+3. **No-Persist Privacy:** Uploaded documents are processed in memory and never persisted to a database, ensuring no stray PHI is left behind after the session ends.
 
-| Decision | Rationale |
-|---|---|
-| [e.g., Used watsonx.ai for anomaly detection] | [e.g., Pre-trained models reduced time-to-value vs. building from scratch] |
-| [Decision 2] | [Rationale 2] |
-| [Decision 3] | [Rationale 3] |
-
-## IBM Technologies Used
-
-[Explain specifically HOW you used each IBM technology — not just that you used it.]
-
-- **[IBM Tech 1, e.g., watsonx.ai]:** [How it was used — e.g., "Used the `ibm/granite-13b-instruct-v2` model via the Python SDK to classify anomaly types from log text."]
-- **[IBM Tech 2]:** [How it was used]
+## User Experience
+The clinician is greeted by a calm, modern, and accessible dashboard. They drag and drop PDF notes into the import zone. Once extracted, they view a "Patient Overview" dashboard containing the generated draft. They can toggle between the clinical timeline, medication changes, and the raw source documents before copying the final, verified text to their EHR.

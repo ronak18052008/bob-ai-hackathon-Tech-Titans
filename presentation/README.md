@@ -1,30 +1,40 @@
-# Presentation
+# Slide Deck Content (TODO: Export to PDF)
 
-Place your slide deck in this folder.
+Since we cannot generate a binary PDF natively here, below is the content outline for the required slides. A team member must assemble this into a slide deck and save it as `slides.pdf` or `slides.pptx` in this directory before final submission.
 
-## Accepted Formats
+---
 
-  slides.pdf      ← Preferred (universally viewable)
-  slides.pptx     ← Acceptable
-  slides.key      ← Acceptable (macOS Keynote)
+## Slide 1: Title
+**MedBrief**
+*Clinical documentation summarisation, built on verifiable evidence.*
+Team: Orion Squad
+Track: AI
 
-Rename your file to `slides.pdf` (or `slides.pptx`) so the evaluation
-pipeline can locate it reliably.
+## Slide 2: The Problem
+- **Time Sink:** Doctors spend 2+ hours daily reading and summarising notes.
+- **Data Fragmentation:** Critical events and medication changes are buried across 50-200 pages.
+- **Risk:** Manual summaries written from memory omit facts, leading to avoidable readmissions.
+- **Current AI gap:** Generative AI hallucinates and lacks source traceability, making it unsafe for medical use.
 
-## Recommended Slide Structure (5–8 slides)
+## Slide 3: The Solution
+- **MedBrief:** An AI documentation assistant designed for clinical safety.
+- **Chronological Extraction:** Automatically builds a timeline of clinical events from unstructured text.
+- **Contextual Drafts:** Generates specific summaries for Ward Rounds, Referrals, and Discharges.
+- **Verifiable First:** Every extracted fact is directly linked to the source document and page number. No black boxes.
 
-  Slide 1: Title — Project name, team name, track
-  Slide 2: Problem — What problem? Who has it? Why does it matter?
-  Slide 3: Solution — What you built in one clear diagram or screenshot
-  Slide 4: Architecture — How the system works technically
-  Slide 5: Demo / Key Feature — Screenshot or flow of your best feature
-  Slide 6: IBM Technologies — Specifically how you used them
-  Slide 7: Results / Impact — What does success look like? Any metrics?
-  Slide 8: Team — Names, roles, what each person built
+## Slide 4: Demo / Architecture
+- **Demo:** [Link to Demo Video]
+- **Frontend:** React application built with a modern glassmorphism UI.
+- **Backend/AI:** Local deterministic simulation for privacy, supported by a Node.js MCP Server.
+- **Data Flow:** Clinician uploads -> Text Extracted -> MCP formats request -> Verified Draft Displayed.
 
-## Tips
+## Slide 5: IBM Technology Integration
+- **Model Context Protocol (MCP):** Implemented an MCP Server in `src/mcp-server/`.
+- **IBM Bob Integration:** The MCP server exposes `summarize_record` and `extract_timeline` tools.
+- **Future State:** Designed to connect directly to IBM watsonx.ai for secure, enterprise-grade LLM inference.
+*(Note: Current integration is at the protocol level. Real watsonx integration requires valid credentials).*
 
-- Keep slides visual — diagrams beat bullet points
-- One idea per slide
-- Font size minimum 24pt for readability
-- Do not paste large code blocks into slides — reference the repo instead
+## Slide 6: Potential Impact
+- **Efficiency:** Returns valuable hours to direct patient care.
+- **Safety:** Reduces medication errors and handover omissions by surfacing hidden data.
+- **Scale:** Can be extended to automate outpatient clinic prep and nursing handovers.

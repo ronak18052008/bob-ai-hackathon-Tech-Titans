@@ -1,21 +1,16 @@
 # Problem Statement
 
-## Background
+## The Audience Affected
+Clinicians in hospitals (junior doctors, specialists, and nurses) who conduct ward rounds, process specialist referrals, and manage hospital discharges.
 
-[Describe the broader context. What domain or industry does this problem belong to? What situation creates the problem?]
-
-## The Problem
-
-[State the problem clearly and specifically. Avoid vague statements like "things are slow" — instead say "Operations teams spend an average of 45 minutes per incident diagnosing pipeline failures because logs are scattered across 6 different tools."]
-
-## Who is Affected
-
-[Describe the specific user or persona experiencing this problem. Be concrete — not "developers" but "backend engineers managing CI/CD pipelines in enterprises with 50+ microservices."]
-
-## Why It Matters
-
-[What is the cost of this problem? Lost time? Revenue? Safety risk? Frustration? Quantify if possible.]
+## The Workflow Pain
+Currently, preparing for a ward round or discharging a patient requires manually trawling through up to 200 pages of unstructured, multi-departmental patient notes. Clinicians must stitch together a cohesive timeline of events, note all medication changes (and their reasons), and flag pending investigations—often relying on memory when writing the final letters.
 
 ## Why Existing Solutions Fall Short
+Most Electronic Health Record (EHR) systems act as digital filing cabinets. They store data but do not synthesise it. Existing AI tools are often generic, lacking the strict source-referencing required in clinical settings, which makes them unsafe for medical documentation where hallucination is unacceptable.
 
-[Briefly explain what people currently do and why it doesn't fully solve the problem. This sets up why your solution is needed.]
+## The Cost
+Clinicians spend approximately two hours per day reading and summarising records. Missing key events or medication changes due to buried information contributes directly to repeated investigations, delays in care, and avoidable hospital readmissions.
+
+## Why This Matters Now
+As healthcare systems face increasing staff shortages and burnout, the administrative burden on doctors is becoming unsustainable. Safely automating the synthesis of clinical records can directly return hours of time to patient care while simultaneously improving handover safety.

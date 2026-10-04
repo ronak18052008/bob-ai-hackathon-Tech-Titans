@@ -1,121 +1,39 @@
-# 🚀 [Your Project Title Here]
+# MedBrief
 
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+## Team: Orion Squad
+**Track:** AI  
+**Lead:** REPLACE_BEFORE_SUBMISSION  
+**Members:** REPLACE_BEFORE_SUBMISSION
 
----
+## Problem Statement
+Doctors spend about two hours per day reading and summarising records for ward rounds, referrals, and discharges. Complex patients may have 50–200 pages across multiple admissions. Important events, medication changes, and pending investigations can be buried in unstructured notes. Referral letters written from memory can omit information and contribute to repeated investigations and avoidable readmissions.
 
-## 👥 Team
+## Solution
+MedBrief is a clinical documentation assistant that helps clinicians review a patient record and prepare evidence-linked summaries. It extracts chronological events and highlights critical details, ensuring all generated facts are directly linked to the source documentation for clinician verification.
 
-| Field | Value |
-|---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+## Key Features
+- **Intelligent Summarisation:** Different output modes for ward-round summaries, referral letters, and discharge summaries.
+- **Source Referencing:** Extracted facts are mapped back to their original source document and page.
+- **Clinical Timeline:** Automatically chronologizes events from scattered unstructured notes.
+- **Medication Tracking:** Identifies medication changes (starts/stops) and outstanding investigations.
+- **MCP Integration:** Exposes tools for IBM Bob to perform patient record summarisation seamlessly.
 
----
+## Tech Stack
+- **Frontend:** React, TypeScript, Vite
+- **Styling:** Vanilla CSS (Glassmorphism, custom design system)
+- **AI / Integration:** Model Context Protocol (MCP) server for IBM Bob integration, ready for watsonx.ai.
 
-## 🎯 Problem Statement
+## How to Run
+See our detailed instructions in [docs/setup-guide.md](docs/setup-guide.md).
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
+## Demo
+- **Video:** [demo/demo-video-link.txt](demo/demo-video-link.txt)
+- **Live Demo:** [demo/live-demo-url.txt](demo/live-demo-url.txt)
+- **Screenshots:** See `demo/screenshots/`
 
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
+## Known Limitations
+- The demo runs in a local deterministic mode using synthetic patient data to ensure no real PHI is exposed.
+- The MCP server is implemented and functional as a protocol, but requires valid IBM watsonx.ai credentials to process unseen live files.
 
----
-
-## 💡 Solution
-
-> In 2–3 sentences: What did you build? How does it solve the problem above?
-
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
-
----
-
-## ✨ Key Features
-
-- **Feature 1:** [Brief description — e.g., "Real-time anomaly detection using watsonx.ai"]
-- **Feature 2:** [Brief description]
-- **Feature 3:** [Brief description]
-- **Feature 4:** [Optional]
-- **Feature 5:** [Optional]
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Technologies |
-|---|---|
-| **Languages** | [e.g., Python, TypeScript] |
-| **Frameworks** | [e.g., FastAPI, React] |
-| **IBM Technologies** | [e.g., watsonx.ai, IBM Bob, IBM Cloud] |
-| **Databases** | [e.g., PostgreSQL, Redis] |
-| **Other** | [e.g., Docker, GitHub Actions] |
-
----
-
-## 📁 Repository Structure
-
-```
-├── src/                  # All source code
-├── docs/                 # Written documentation
-│   ├── problem-statement.md
-│   ├── solution-overview.md
-│   ├── architecture.md
-│   └── setup-guide.md
-├── demo/                 # Demo artifacts
-│   ├── screenshots/      # App screenshots
-│   └── demo-video-link.txt  # Link to demo video
-├── presentation/         # Slide deck
-└── submission.yaml       # Structured submission metadata
-```
-
----
-
-## ⚡ How to Run
-
-> **Copy these exact steps from your [`docs/setup-guide.md`](docs/setup-guide.md)**
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
-
-# 2. Install dependencies
-[your install command here]
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your values
-
-# 4. Run the project
-[your run command here]
-```
-
----
-
-## 🖥️ Demo
-
-| Artifact | Link |
-|---|---|
-| 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
-| 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
-| 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | [See presentation/slides.pdf](presentation/) |
-
----
-
-## ⚠️ Known Limitations
-
-> Be honest — judges appreciate transparency over overclaiming.
-
-- [Limitation 1: e.g., "Authentication is mocked — not production-ready"]
-- [Limitation 2: e.g., "Only tested on Chrome"]
-- [Limitation 3: e.g., "Feature X is scaffolded but not fully implemented"]
-
----
-
-## 🏅 What We're Most Proud Of
-
-[Tell the judges what part of your submission is strongest and worth paying close attention to.]
-
----
+## What We're Most Proud Of
+We are most proud of our strict adherence to clinical safety principles. Rather than acting as a diagnostic "black box," MedBrief is designed to be a verifiable assistant. It refuses to invent sources, explicitly flags conflicting data, and prioritises clinician review above complete automation.
