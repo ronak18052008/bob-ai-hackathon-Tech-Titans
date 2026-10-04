@@ -45,7 +45,7 @@
 ---
 
 ## Slide 7: Team Tech Titans
-- **Ronak** (Team Lead) — `ronak18052008@gmail.com` — Full-Stack Architecture, IBM Granite 3.0 & watsonx Pipeline
+- **Ronak** (Team Lead) — `ronakmarvaniya1805@gmail.com` — Full-Stack Architecture, IBM Granite 3.0 & watsonx Pipeline
 - **Agola Aryan Jitendrabhai** — `aryanagola7@gmail.com` — Multimodal OCR Ingestion & Entity Extraction Pipeline
 - **Khamar Vaishvi Bhavinkumar** — `vaishvi.khamar@gmail.com` — Clinical Knowledge Graph & Timeline Reconstruction
 - **Koladiya Henil Shantibhai** — `koladiyahenil08@gmail.com` — Documentation Conflict Surveillance & Clinical Gap Radar

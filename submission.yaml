@@ -7,10 +7,10 @@ team:
   track: "AI"                                  # REQUIRED — one of: AI | DevOps | Sustainability | Open
   lead:
     name: "Ronak"                              # REQUIRED — e.g., "Ronak"
-    email: "ronak18052008@gmail.com"           # REQUIRED — Team Lead Email
+    email: "ronakmarvaniya1805@gmail.com"      # REQUIRED — Team Lead Email
   members:
     - name: "Ronak"                            # Team Lead
-      email: "ronak18052008@gmail.com"
+      email: "ronakmarvaniya1805@gmail.com"
     - name: "Agola Aryan Jitendrabhai"
       email: "aryanagola7@gmail.com"
     - name: "Khamar Vaishvi Bhavinkumar"

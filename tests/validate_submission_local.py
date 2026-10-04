@@ -27,7 +27,7 @@ req_keys = [
     'Tech Titans',
     'AI',
     'Ronak',
-    'ronak18052008@gmail.com',
+    'ronakmarvaniya1805@gmail.com',
     'MedSynapse AI',
     'problem_statement:',
     'solution_summary:',
