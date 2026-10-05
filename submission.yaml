@@ -64,10 +64,17 @@ submission:
     The strict adherence to clinical safety, ensuring AI-generated facts are cross-referenced 
     with original source documents to prevent hallucinations and maintain clinician oversight.
 
-  known_limitations: >                 
-    The current demo uses synthetic data as we do not process real PHI. The MCP server is built 
-    and ready to connect to a configured WatsonX backend via IBM Bob, but requires real credentials 
-    to process live arbitrary records.
+  known_limitations: >
+  The current demonstration uses synthetic and sample medical data and does not
+  process real patient-identifiable health information (PHI). AI-generated
+  summaries are intended to assist clinicians and do not replace professional
+  medical judgment or clinical decision-making. Summary quality depends on the
+  completeness, accuracy, and structure of the input records, and complex or
+  ambiguous medical information may require additional clinician verification.
+  The current prototype is not a production-grade healthcare deployment and
+  would require additional security, privacy, compliance, authentication, and
+  audit controls before real-world use. Full live IBM Bob and watsonx.ai
+  functionality requires properly configured credentials and backend services.
 
 # =============================================================================
 # ARTIFACT LOCATIONS
