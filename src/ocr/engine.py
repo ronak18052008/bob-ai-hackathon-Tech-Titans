@@ -7,7 +7,10 @@ import io
 import re
 from typing import Dict, Any
 from PIL import Image
-import pypdf
+try:
+    import pypdf
+except ImportError:
+    pypdf = None
 
 from src.ai.document_summarizer import ClinicalDocumentSummarizer
 
@@ -49,16 +52,19 @@ class OCREngine:
 
         # 1. Handle PDF documents
         if lower_name.endswith(".pdf"):
-            try:
-                reader = pypdf.PdfReader(io.BytesIO(content_bytes))
-                page_count = len(reader.pages)
-                page_texts = []
-                for p in reader.pages:
-                    txt = p.extract_text()
-                    if txt:
-                        page_texts.append(txt)
-                extracted_text = "\n\n".join(page_texts)
-            except Exception as e:
+            if pypdf is not None:
+                try:
+                    reader = pypdf.PdfReader(io.BytesIO(content_bytes))
+                    page_count = len(reader.pages)
+                    page_texts = []
+                    for p in reader.pages:
+                        txt = p.extract_text()
+                        if txt:
+                            page_texts.append(txt)
+                    extracted_text = "\n\n".join(page_texts)
+                except Exception:
+                    extracted_text = content_bytes.decode("utf-8", errors="replace")
+            else:
                 extracted_text = content_bytes.decode("utf-8", errors="replace")
 
         # 2. Handle image files (PNG, JPG, JPEG)
