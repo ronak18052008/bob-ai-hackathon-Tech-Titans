@@ -4,10 +4,10 @@
 
 team:
   name: "Tech Titans"                             
-  track: "AI"                                  
+  track: "Pharma & Healthcare"                                  
   lead:
     name: "Ronak Marvaniya"            
-    email: "ronakmarvaniya1805@gmail.com"          
+    email: "250170107078@vgecg.ac.in"          
   members:
     - name: "Henil Koladiya"          
       email: "koladiyahenil08@gmail.com"
@@ -65,16 +65,9 @@ submission:
     with original source documents to prevent hallucinations and maintain clinician oversight.
 
   known_limitations: >
-  The current demonstration uses synthetic and sample medical data and does not
-  process real patient-identifiable health information (PHI). AI-generated
-  summaries are intended to assist clinicians and do not replace professional
-  medical judgment or clinical decision-making. Summary quality depends on the
-  completeness, accuracy, and structure of the input records, and complex or
-  ambiguous medical information may require additional clinician verification.
-  The current prototype is not a production-grade healthcare deployment and
-  would require additional security, privacy, compliance, authentication, and
-  audit controls before real-world use. Full live IBM Bob and watsonx.ai
-  functionality requires properly configured credentials and backend services.
+  The system depends on the quality and completeness of the available medical records, and OCR may be less accurate for poor-quality scans or handwritten notes.
+  AI-generated summaries may require doctor verification, as the system is designed to assist clinical decision-making rather than replace medical professionals.
+  
 
 # =============================================================================
 # ARTIFACT LOCATIONS
