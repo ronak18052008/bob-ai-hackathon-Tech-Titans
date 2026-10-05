@@ -55,7 +55,7 @@ submission:
     - "watsonx.ai"
 
   databases:
-  - "PostgreSQL"
+    - "PostgreSQL"
 
   other:
     - "MCP (Model Context Protocol)"
