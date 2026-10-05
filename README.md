@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | **Team Name** | Tech Titans |
-| **Track** | AI |
+| **Track** | Pharma & Healthcare |
 | **Team Lead** | Ronak Marvaniya — 250170107078@vgecg.ac.in |
 | **Members** | Henil Koladiya, Darsh Joshi, Vaishvi Khamar, Aryan Agola, Khush Chandrala |
 
