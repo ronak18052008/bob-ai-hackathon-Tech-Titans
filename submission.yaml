@@ -1,6 +1,6 @@
-# =============================================================================
+# ==============================================================================
 # HACKATHON SUBMISSION METADATA
-# =============================================================================
+# ==============================================================================
 
 team:
   name: "Tech Titans"                             
@@ -25,12 +25,12 @@ submission:
   title: "MedBrief AI"                               
 
   problem_statement: >                 
-    Clinicians spend up to two hours daily reading and summarising complex patient records. 
-    Important events and medication changes can be buried in unstructured notes, leading to avoidable readmissions.
+    Clinicians spend up to two hours daily reading and summarising complex patient records. Important events and medication changes can be buried in
+    unstructured notes, leading to avoidable readmissions.
 
   solution_summary: >                  
-    MedBrief is a clinical documentation assistant that helps clinicians review patient records and prepare evidence-linked summaries. 
-    It provides a clear timeline, highlights medication changes, and references sources directly.
+    MedBrief is a clinical documentation assistant that helps clinicians review patient records and prepare evidence-linked summaries. It provides a clear 
+    timeline, highlights medication changes, and references sources directly.
 
   key_features:                        
     - "Import clinical notes to generate summaries for ward rounds, referrals, and discharges"
